@@ -12,8 +12,8 @@ export default class User extends Model {
     return {
       firstName: String,
       lastName: String,
-      email: String,
-      facebookId: String,
+      email: {type: String, unique: true},
+      facebookId: {type: String, unique: true},
       avatar: String,
       message: String
     }

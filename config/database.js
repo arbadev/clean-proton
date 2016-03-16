@@ -3,8 +3,11 @@ export default {
   stores: {
     mongo: {
       connection: {
-        host: 'localhost',
-        port: process.env.DB_PORT_27017_TCP_PORT,
+        username: process.env.MONGOLAB_USERNAME || '',
+        password: process.env.MONGOLAB_PASSWORD || '',
+        host: process.env.MONGOLAB_HOST || 'localhost',
+        port: process.env.MONGOLAB_PORT || 27017,
+        database: process.env.MONGOLAB_DATABASE || 'persona-test'
       },
       adapter: 'mongoose'
     }
