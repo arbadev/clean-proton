@@ -44,7 +44,10 @@ export default class StorageService extends Service {
   _upload(file) {
     return new Promise((resolve, reject) => {
       const opts = this._buildObject(file)
-      s3.upload(opts, (err, data) => (err) ? resolve(data.Location) : reject(err))
+      s3.upload(opts, (err, data) => {
+        if (err) return reject(err)
+        return resolve(data.Location)
+      })
     })
   }
 

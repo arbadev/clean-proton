@@ -30,9 +30,8 @@ export default class UserController extends Controller {
    * uploadAvatar() {
      const userId = this.request.user._id
      try {
-       console.log('FILES', this.req.files.avatar);
-       const [avatar] = yield StorageService.upload(this.req.files)
-       const user = yield User.update(userId, {avatar})
+       const [avatar] = yield StorageService.upload(this.req.files.avatar)
+       const user = yield User.updateOne(userId, {avatar})
        this.response.body = user
      } catch (err) {
        proton.log.error('UserController.uploadAvatar', err)
@@ -46,8 +45,8 @@ export default class UserController extends Controller {
     * uploadMessage() {
       const userId = this.request.user._id
       try {
-        const [message] = yield StorageService.upload(this.req.files)
-        const user = yield User.update(userId, {message})
+        const [message] = yield StorageService.upload(this.req.files.message)
+        const user = yield User.updateOne(userId, {message})
         this.response.body = user
       } catch (err) {
         proton.log.error('UserController.uploadMessage', err)

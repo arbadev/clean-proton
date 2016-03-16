@@ -28,7 +28,6 @@ export default class  AuthPolicies extends Policy {
     const self = this
     const opts = { session: false }
     const cb = function * (err, user, scope) {
-      console.log('bearer', err, user, scope);
       if (err || !user) return self.status = 401
       self.request.user = user
       self.request.scope = scope

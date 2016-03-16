@@ -35,9 +35,9 @@ export default class User extends Model {
     return this.findOne(criteria)
   }
 
-  static update(id, opts) {
+  static updateOne(id, opts) {
     const _id = ObjectId.isValid(id) ? new ObjectId(id) : null
-    return this.update({_id}, opts)
+    return this.findOneAndUpdate(_id, opts)
   }
 
 }
