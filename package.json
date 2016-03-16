@@ -1,0 +1,43 @@
+{
+  "name": "monolithic",
+  "version": "1.0.0",
+  "description": "Persona monolithic app",
+  "scripts": {
+    "test": "mocha -R spec --compilers js:babel-core/register ./test/**/*.js",
+    "start": "node ./server.js"
+  },
+  "author": "Nucleos.io",
+  "license": "ISC",
+  "dependencies": {
+    "aws-sdk": "^2.0.0",
+    "babel-core": "^6.0.0",
+    "babel-plugin-add-module-exports": "^0.1.2",
+    "babel-plugin-syntax-async-functions": "^6.0.0",
+    "babel-plugin-syntax-async-generators": "^6.0.0",
+    "babel-polyfill": "^6.0.1",
+    "babel-preset-es2015-node5": "^1.0.0",
+    "babel-preset-node5": "^10.0.0",
+    "hat": "0.0.3",
+    "koa-multer": "^0.0.2",
+    "koa-router": "^5.0.0",
+    "lodash": "^4.0.0",
+    "mongo-uri-builder": "^1.0.0",
+    "passport-facebook-token": "^3.0.2",
+    "passport-http-bearer": "^1.0.1",
+    "proton-controller": "^1.0.6",
+    "proton-exception": "^1.0.9",
+    "proton-koa": "^1.2.3",
+    "proton-mongoose-model": "^1.0.6",
+    "proton-policy": "1.0.5",
+    "proton-quark-mongoose": "^1.1.2",
+    "proton-quark-multer": "^1.1.7",
+    "proton-quark-passport": "^1.0.2",
+    "proton-service": "^1.0.5",
+    "winston": "^2.0.0"
+  },
+  "devDependencies": {
+    "co-supertest": "^0.0.10",
+    "mocha-co": "^1.17.1-co.1",
+    "mocha-better-spec-reporter": "^3.0.1"
+  }
+}
