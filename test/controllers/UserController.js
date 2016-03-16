@@ -20,6 +20,14 @@ describe('UserController', () => {
       .set('Authorization', 'Bearer xxxx')
       .expect(401)
   })
+
+  it('destroy', function*() {
+    const id = '123456789'
+    const response = yield request
+      .delete('/users/' + id)
+      .expect(404)
+  })
+
   //
   // it('uploadAvatar', function*() {
   //   const response = yield request

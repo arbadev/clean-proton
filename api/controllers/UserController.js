@@ -14,6 +14,7 @@ export default class UserController extends Controller {
    * @description
    */
   * create() {
+    proton.log.debug('create', this.request.body)
     try {
       const user = yield User.create(this.request.body)
       this.response.body = user
@@ -43,6 +44,7 @@ export default class UserController extends Controller {
     *
     */
     * uploadMessage() {
+      proton.log.debug('uploadMessage . . . ', this.req.files)
       const userId = this.request.user._id
       try {
         const [message] = yield StorageService.upload(this.req.files.message)
@@ -50,6 +52,20 @@ export default class UserController extends Controller {
         this.response.body = user
       } catch (err) {
         proton.log.error('UserController.uploadMessage', err)
+        this.response.status = 400
+      }
+    }
+
+    /**
+     *
+     *
+     */
+    * destroy() {
+      try {
+        const user = yield User.destroy(this.params.id)
+        this.response.body = user
+        this.response.status = !user ? 404 : 200
+      } catch (e) {
         this.response.status = 400
       }
     }

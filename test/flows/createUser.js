@@ -45,6 +45,10 @@ describe('All flow for create a user', () => {
        .expect(200)
       proton.log.debug('Message response', resMessage.body)
 
+    const resDel = yield request
+       .delete('/users/' + user.facebookId)
+       .expect(200)
+      proton.log.debug('Delete user response', resDel.body)
   })
 
 })

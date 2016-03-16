@@ -6,6 +6,7 @@ const router = new Router({
 })
 
 router.post('/', AuthPolicies.bearerWithoutUser, UserController.create)
+router.del('/:id', UserController.destroy)
 router.put('/me/avatar', AuthPolicies.bearer, UserController.uploadAvatar)
 router.put('/me/message', AuthPolicies.bearer, UserController.uploadMessage)
 
