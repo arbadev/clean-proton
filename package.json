@@ -38,6 +38,7 @@
   "devDependencies": {
     "co-supertest": "^0.0.10",
     "mocha-co": "^1.17.1-co.1",
-    "mocha-better-spec-reporter": "^3.0.1"
+    "mocha-better-spec-reporter": "^3.0.1",
+    "mongoose": "^4.4.12"
   }
 }
