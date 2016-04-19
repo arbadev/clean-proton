@@ -31,6 +31,7 @@
     "proton-policy": "1.0.5",
     "proton-quark-mongoose": "^1.1.2",
     "proton-quark-multer": "^1.1.7",
+    "proton-quark-onesignal-sender": "^1.0.0",
     "proton-quark-passport": "^1.0.2",
     "proton-service": "^1.0.5",
     "winston": "^2.0.0"
