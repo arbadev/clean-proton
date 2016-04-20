@@ -12,10 +12,11 @@ export default class User extends Model {
     return {
       firstName: String,
       lastName: String,
+      avatar: String,
+      message: String,
       email: {type: String, unique: true},
       facebookId: {type: String, unique: true},
-      avatar: String,
-      message: String
+      coordinates: {type: [Number], index: '2d'} // [longitude, latitude]
     }
   }
 
