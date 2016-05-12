@@ -1,19 +1,17 @@
 'use strict'
 
 import Policy from 'proton-policy'
-import _ from 'lodash'
 
-export default class  AuthPolicies extends Policy {
-
-  constructor(proton) {
-    super(proton)
-  }
+export default class AuthPolicies extends Policy {
 
   * facebook(next) {
     const self = this
     const opts = { session: false }
     const cb = function * (err, user) {
-      if (err) return self.response.status = 401
+      if (err) {
+        self.response.status = 401
+        return self
+      }
       self.request.user = user
       yield next
     }
@@ -28,7 +26,10 @@ export default class  AuthPolicies extends Policy {
     const self = this
     const opts = { session: false }
     const cb = function * (err, user, scope) {
-      if (err || !user) return self.status = 401
+      if (err || !user) {
+        self.response.status = 401
+        return self
+      }
       self.request.user = user
       self.request.scope = scope
       yield next
@@ -45,7 +46,10 @@ export default class  AuthPolicies extends Policy {
     const opts = { session: false }
     const withoutUser = 'error_description="without user"'
     const cb = function * (err, user, info) {
-      if (err || info.indexOf(withoutUser) === -1) return self.status = 401
+      if (err || info.indexOf(withoutUser) === -1) {
+        self.response.status = 401
+        return self
+      }
       yield next
     }
     try {

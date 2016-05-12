@@ -19,7 +19,7 @@ export default class StorageService extends Service {
     super(app)
     this.s3 =
     aws.config.update({
-      region: 'us-west-2'
+      region: 'us-west-2',
     })
   }
 
@@ -61,7 +61,7 @@ export default class StorageService extends Service {
       Bucket: process.env.AWS_BUCKET_NAME,
       Key: file.name,
       Body: body,
-      ContentType: file.mimetype
+      ContentType: file.mimetype,
     }
   }
 
