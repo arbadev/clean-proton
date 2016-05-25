@@ -5,7 +5,7 @@ import app from '../../server.js'
 
 // Declarative section
 const request = supertest(app)
-const facebookToken = 'CAAIjRkSocuoBAMTvlOtxfHccCnCaxsbpeZCI5OH69xu4eDYIbzNc4As3hpsoX2ZBkFq0XWfNdvVEnqW2RlJbpp6f83rUwnB48AZCIPcQai3493b2vPt7oUTZAZAesveQnbcLd9xmlj92s8hmCIdfd7OwC7p3txW2ZBVZCFVS2TbV3QpzWu2mK6fbFGt1tzqKjsG6XSQspGR3QSZCzSUZB7c1JIHGeZCu5UqC4YhTmWNSMlyAZDZD'
+const facebookToken = 'CAAIjRkSocuoBAI2nsD9aIRrGX7aOiNByXjJTbmlKi011wldd4IsjtVwYWQ84Fak55qOzmX2UhDwJoHznNs3Ck0cLTMZAqaheagVAQUsm9q07DZCO7ZAPXmJ6H6nGA6ryZAAZC8ZAA7Q0Hu4YEuqEeQ9Ou20DzQYi5yvKvpDwIc3utAsN35IdRZAcMdhSjuTGFyUlZChin5l4yi7o2HJmGZB3celXb2F40mDg3wSoFtFkpJgZDZD'
 const user = {
   firstName: 'Carlos',
   lastName: 'Marcano',
