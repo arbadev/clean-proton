@@ -1,35 +1,28 @@
 'use strict'
 
-import supertest from 'co-supertest'
-import mongoose from 'mongoose'
-import app from '../../server.js'
-
-
+import Model from 'proton-mongoose-model'
 
 describe('Spark Model', () => {
-
   it('should create a new spark', function*() {
     const spark = {
       from: {
-        user: mongoose.Types.ObjectId(),
+        user: new Model.adapter.Types.ObjectId(),
         levels: {
-          one: { decision: true }
-        }
+          one: { decision: true },
+        },
       },
       to: {
-        user: mongoose.Types.ObjectId(),
+        user: new Model.adapter.Types.ObjectId(),
         levels: {
-          one: { decision: true }
-        }
+          one: { decision: true },
+        },
       },
-      status: 'undefined'
+      status: 'undefined',
     }
     try {
-      const record = yield Spark.create(spark)
-      proton.log.debug(`A new spark has been created ${record}`)
-    } catch(err) {
+      yield Spark.create(spark)
+    } catch (err) {
       proton.log.error(`Error creating the spark ${err}`)
     }
   })
-
 })

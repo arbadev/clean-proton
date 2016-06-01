@@ -1,10 +1,8 @@
 'use strict'
 
 import Model from 'proton-mongoose-model'
-import MongooseQuark from 'proton-quark-mongoose'
 
-const mongoose = MongooseQuark.mongoose()
-const ObjectId = mongoose.Types.ObjectId
+const { ObjectId } = Model.types
 
 export default class User extends Model {
 
@@ -12,19 +10,31 @@ export default class User extends Model {
     return {
       firstName: String,
       lastName: String,
-      email: { type: String, unique: true },
-      facebookId: { type: String, unique: true },
       avatar: String,
       message: String,
+      email: { type: String, unique: true },
+      facebookId: { type: String, unique: true },
+      coordinates: { type: [Number], index: '2d' },
     }
   }
 
   /**
-  * @method findOneById
-  * @description find a user for any of its unique identifiers
-  */
+   *
+   *
+   */
+  static me(id) {
+    const { Util } = proton.app.services
+    const _id = Util.getObjectId(id)
+    return this.findOne({ _id })
+  }
+
+  /**
+   * @method findOneById
+   * @description find a user for any of its unique identifiers
+   */
   static findOneById(id) {
-    const _id = ObjectId.isValid(id) ? new ObjectId(id) : null
+    const { Util } = proton.app.services
+    const _id = Util.getObjectId(id)
     const criteria = {
       $or: [
         { _id },
@@ -36,7 +46,8 @@ export default class User extends Model {
   }
 
   static updateOne(id, opts) {
-    const _id = ObjectId.isValid(id) ? new ObjectId(id) : null
+    const { Util } = proton.app.services
+    const _id = Util.getObjectId(id)
     return this.findOneAndUpdate(_id, opts, { new: true })
   }
 
@@ -45,7 +56,8 @@ export default class User extends Model {
   *
   */
   static destroy(id) {
-    const _id = ObjectId.isValid(id) ? new ObjectId(id) : null
+    const { Util } = proton.app.services
+    const _id = Util.getObjectId(id)
     const criteria = {
       $or: [
         { _id },

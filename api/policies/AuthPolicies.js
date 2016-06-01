@@ -9,6 +9,7 @@ export default class AuthPolicies extends Policy {
     const opts = { session: false }
     const cb = function * (err, user) {
       if (err) {
+        proton.log.debug('error', err)
         self.response.status = 401
         return self
       }

@@ -5,8 +5,6 @@ import Controller from 'proton-controller'
 export default class AuthController extends Controller {
 
   * authenticate() {
-    proton.log.debug('authenticate', this.request.body)
-    const { Token, User } = proton.app.models
     const response = {}
     try {
       const token = yield Token.generate(this.request.user.id)
