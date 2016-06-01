@@ -14,8 +14,18 @@ export default class User extends Model {
       message: String,
       email: { type: String, unique: true },
       facebookId: { type: String, unique: true },
-      coordinates: { type: [Number], index: '2d' } // [longitude, latitude]
+      coordinates: { type: [Number], index: '2d' },
     }
+  }
+
+  /**
+   *
+   *
+   */
+  static me(id) {
+    const { Util } = proton.app.services
+    const _id = Util.getObjectId(id)
+    return this.findOne({ _id })
   }
 
   /**
@@ -29,8 +39,8 @@ export default class User extends Model {
       $or: [
         { _id },
         { email: id },
-        { facebookId: id }
-      ]
+        { facebookId: id },
+      ],
     }
     return this.findOne(criteria)
   }
@@ -38,13 +48,13 @@ export default class User extends Model {
   static updateOne(id, opts) {
     const { Util } = proton.app.services
     const _id = Util.getObjectId(id)
-    return this.findOneAndUpdate(_id, opts, { new:true })
+    return this.findOneAndUpdate(_id, opts, { new: true })
   }
 
   /**
-   *
-   *
-   */
+  *
+  *
+  */
   static destroy(id) {
     const { Util } = proton.app.services
     const _id = Util.getObjectId(id)
@@ -52,10 +62,30 @@ export default class User extends Model {
       $or: [
         { _id },
         { email: id },
-        { facebookId: id }
-      ]
+        { facebookId: id },
+      ],
     }
     return this.findOneAndRemove(criteria)
+  }
+
+  /**
+  *
+  *
+  */
+  static * findWithQuery(query) {
+    const { sparkiesOf, sparkStatus, addNervay } = query
+    if (sparkiesOf) {
+      const id = ObjectId.isValid(sparkiesOf) ? new ObjectId(sparkiesOf) : null
+      const criteria = {
+        status: sparkStatus,
+        $or: [
+          { from: { user: id } },
+          { to: { user: id } },
+        ],
+      }
+      const sparkies = yield Spark.find(criteria)
+    }
+    return this.findOneAndRemove()
   }
 
 }

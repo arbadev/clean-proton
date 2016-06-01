@@ -17,8 +17,8 @@ export default class FacebookStrategy extends Strategy {
 
   static opts() {
     return {
-      clientID: process.env.FACEBOOK_CLIENT_ID,
-      clientSecret: process.env.FACEBOOK_CLIENT_SECRET
+      clientID: process.env.FACEBOOK_CLIENT_ID || '123456789',
+      clientSecret: process.env.FACEBOOK_CLIENT_SECRET || '123456789',
     }
   }
 }

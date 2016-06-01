@@ -1,3 +1,4 @@
+/* eslint max-len: 0 */
 'use strict'
 
 import supertest from 'co-supertest'
@@ -12,15 +13,14 @@ const user = {
   email: 'cj@nucleos.io',
   avatar: 'avatar.png',
   message: 'message.png',
-  facebookId: '10208334708303023'
+  facebookId: '10208334708303023',
 }
 
 describe('All flow for create a user', () => {
-
   it('createUser', function*() {
     const resAuth = yield request
       .post('/auth')
-      .send({access_token: facebookToken})
+      .send({ access_token: facebookToken })
       .expect(200)
     proton.log.debug('Auth response', resAuth.body)
 
@@ -43,12 +43,11 @@ describe('All flow for create a user', () => {
        .attach('message', 'test/fixtures/avatar-tony.png')
        .set('Authorization', `Bearer ${resAuth.body.token}`)
        .expect(200)
-      proton.log.debug('Message response', resMessage.body)
+    proton.log.debug('Message response', resMessage.body)
 
     const resDel = yield request
-       .delete('/users/' + user.facebookId)
+       .delete(`/users/${user.facebookId}`)
        .expect(200)
-      proton.log.debug('Delete user response', resDel.body)
+    proton.log.debug('Delete user response', resDel.body)
   })
-
 })

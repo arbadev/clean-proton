@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Persona monolithic app",
   "scripts": {
-    "test": "mocha -R spec --compilers js:babel-core/register ./test/flows/createUser.js",
+    "test": "mocha -R spec --compilers js:babel-core/register ./test/**/*.js",
     "start": "node ./server.js"
   },
   "author": "Nucleos.io",
@@ -37,9 +37,13 @@
     "winston": "^2.0.0"
   },
   "devDependencies": {
+    "babel-eslint": "^6.0.4",
     "co-supertest": "^0.0.10",
-    "mocha-co": "^1.17.1-co.1",
+    "eslint": "^2.9.0",
+    "eslint-config-airbnb-base": "^2.0.0",
+    "eslint-plugin-import": "^1.7.0",
     "mocha-better-spec-reporter": "^3.0.1",
+    "mocha-co": "^1.17.1-co.1",
     "mongoose": "^4.4.12"
   }
 }
