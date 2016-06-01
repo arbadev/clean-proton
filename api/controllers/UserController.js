@@ -36,7 +36,6 @@ export default class UserController extends Controller {
    *
    */
   * uploadAvatar() {
-    proton.log.debug('files on upload avatar', this.req.files)
     const userId = this.request.user._id
     const { StorageService } = proton.app.services
     try {
@@ -53,9 +52,7 @@ export default class UserController extends Controller {
     *
     */
   * uploadMessage() {
-    proton.log.debug('files on upload message', this.req.files)
     const userId = this.request.user._id
-    proton.log.debug('userId', userId)
     const { StorageService } = proton.app.services
     try {
       const [message] = yield StorageService.upload(this.req.files.message)
