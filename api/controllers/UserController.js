@@ -9,8 +9,6 @@ export default class UserController extends Controller {
    * @description
    */
   * create() {
-    const { User } = proton.app.models
-    proton.log.debug('create', this.request.body)
     try {
       const user = yield User.create(this.request.body)
       this.response.body = user
@@ -25,7 +23,6 @@ export default class UserController extends Controller {
   *
   */
   * uploadAvatar() {
-    const { User } = proton.app.models
     const { StorageService } = proton.app.services
     const userId = this.request.user._id
     try {
@@ -42,7 +39,6 @@ export default class UserController extends Controller {
   *
   */
   * uploadMessage() {
-    const { User } = proton.app.models
     const { StorageService } = proton.app.services
     const userId = this.request.user._id
     try {
@@ -60,7 +56,6 @@ export default class UserController extends Controller {
    *
    */
   * destroy() {
-    const { User } = proton.app.models
     try {
       const user = yield User.destroy(this.params.id)
       this.response.body = user
@@ -75,10 +70,9 @@ export default class UserController extends Controller {
    *
    */
   * find() {
-    const { User } = proton.app.models
     const { query } = this
     try {
-      this.response.body = yield User.find(query)
+      this.response.body = yield User.findQ(query)
     } catch (err) {
       proton.log.error('UserController.find', err)
       this.response.status = 400

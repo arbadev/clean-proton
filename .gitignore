@@ -38,3 +38,6 @@ jspm_packages
  tmp/
  .tmp
  tmp
+
+#visual studio code
+.vscode/
