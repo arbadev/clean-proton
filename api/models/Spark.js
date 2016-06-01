@@ -4,7 +4,7 @@ import Model from 'proton-mongoose-model'
 import _ from 'lodash'
 
 
-const status = ['undefined','one','two,','three','terminated']
+const statuses = ['undefined','one','two,','three','terminated']
 const levelSchema = {
   one: {decision: Boolean},
   two: {decision: Boolean, message: String},
@@ -20,10 +20,10 @@ export default class Spark extends Model {
         levels: levelSchema
       },
       to: {
-        user: {type: Model.types.ObjectId, required: true},
+        user: { type: Model.types.ObjectId, required: true },
         levels: levelSchema
       },
-      status: {type: String, enum: status, default: 'undefined'}
+      status: { type: String, enum: statuses, default: 'undefined' }
     }
   }
 
@@ -62,17 +62,16 @@ export default class Spark extends Model {
    * @param from: this always will be the client which want to start the next lv
    * @param level: {two: { decision: true, message: 'url' } }
    */
-
   static * updateLevel(id, userId, level) {
-    const criteria = { _id: new Spark.types.ObjectId(id) }
+    const criteria = { _id: new Model.types.ObjectId(id) }
     const spark = yield Spark.findOne(criteria)
     const sparkMate = spark.from.user == userId ? spark.to : spark.from
     const [levelName] = Object.getOwnPropertyNames(level)
     const decision = level[levelName].decision
-    // let status = !decision ? 'terminated' : sparkMate.levels[levelName] && sparkMate.levels[levelName].decision ? levelName : spark.status
+    let status = ''
 
     if (!decision) {
-      let status = 'terminated'
+      status = 'terminated'
     } else if (sparkMate.levels[levelName] && sparkMate.levels[levelName].decision) {
       status = levelName
     } else {
@@ -88,9 +87,10 @@ export default class Spark extends Model {
 
     const updatedSpark = yield Spark.findOneAndUpdate(criteria, updateData, { new: true })
     const pushMessage = {
-      event: 'updateMessage',
+      event: 'update spark',
       data: { _id: id }
     }
+    const { NotificationService } = proton.app.services
     NotificationService.sendPush(sparkMate.user, pushMessage)
     return Promise.resolve(updatedSpark)
   }
