@@ -1,9 +1,9 @@
 'use strict'
 import Router from 'koa-router'
 
-const router = new Router({
-  prefix: '/users'
-})
+const router = new Router({ prefix: '/users' })
+const { AuthPolicies } = proton.app.policies
+const { UserController } = proton.app.controllers
 
 router.post('/', AuthPolicies.bearerWithoutUser, UserController.create)
 router.del('/:id', UserController.destroy)

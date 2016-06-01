@@ -66,24 +66,24 @@ export default class Spark extends Model {
   static * updateLevel(id, userId, level) {
     const criteria = { _id: new Spark.types.ObjectId(id) }
     const spark = yield Spark.findOne(criteria)
-    const sparkMate = spark.from.user == userId : spark.to ? spark.from
-    const key = spark.from.user == userId : 'from' ? 'to'
+    const sparkMate = spark.from.user == userId ? spark.to : spark.from
     const [levelName] = Object.getOwnPropertyNames(level)
     const decision = level[levelName].decision
     // let status = !decision ? 'terminated' : sparkMate.levels[levelName] && sparkMate.levels[levelName].decision ? levelName : spark.status
 
     if (!decision) {
       let status = 'terminated'
-    }else if (sparkMate.levels[levelName] && sparkMate.levels[levelName].decision) {
+    } else if (sparkMate.levels[levelName] && sparkMate.levels[levelName].decision) {
       status = levelName
-    }else {
+    } else {
       status = spark.status
     }
 
     const key = spark.from.user == userId ? 'from' : 'to'
+    const keyLevels = `${key}.levels`
     const updateData = {
       status,
-      `${key}.levels`: Object.assign({}, spark[key].levels, level),
+      [keyLevels]: Object.assign({}, spark[key].levels, level),
     }
 
     const updatedSpark = yield Spark.findOneAndUpdate(criteria, updateData, { new: true })
@@ -92,7 +92,7 @@ export default class Spark extends Model {
       data: { _id: id }
     }
     NotificationService.sendPush(sparkMate.user, pushMessage)
-    return return Promise.resolve(updatedSpark)
+    return Promise.resolve(updatedSpark)
   }
 
 }

@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Persona monolithic app",
   "scripts": {
-    "test": "mocha -R spec --compilers js:babel-core/register ./test/**/*.js",
+    "test": "mocha -R spec --compilers js:babel-core/register ./test/flows/createUser.js",
     "start": "node ./server.js"
   },
   "author": "Nucleos.io",

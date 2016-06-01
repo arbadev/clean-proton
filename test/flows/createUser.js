@@ -17,7 +17,7 @@ const user = {
 
 describe('All flow for create a user', () => {
 
-  it('Create a user in Persona', function*() {
+  it('createUser', function*() {
     const resAuth = yield request
       .post('/auth')
       .send({access_token: facebookToken})
