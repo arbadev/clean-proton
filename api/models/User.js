@@ -12,9 +12,27 @@ export default class User extends Model {
       lastName: String,
       avatar: String,
       message: String,
-      email: { type: String, unique: true },
-      facebookId: { type: String, unique: true },
-      coordinates: { type: [Number], index: '2d' },
+      status: {
+        type: String,
+        enum: ['on', 'off'],
+        default: 'on',
+      },
+      gender: {
+        type: String,
+        enum: ['woman', 'man'],
+      },
+      email: {
+        type: String,
+        unique: true,
+      },
+      facebookId: {
+        type: String,
+        unique: true,
+      },
+      coordinates: {
+        type: [Number],
+        index: '2d',
+      },
     }
   }
 
