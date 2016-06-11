@@ -2,6 +2,8 @@
 
 import Model from 'proton-mongoose-model'
 
+const { ObjectId } = Model.adapter.Types
+
 export default class Like extends Model {
 
   schema() {
@@ -11,6 +13,7 @@ export default class Like extends Model {
       value: {
         type: String,
         enum: ['like', 'dislike'],
+        required: true,
       },
     }
   }
@@ -29,7 +32,8 @@ export default class Like extends Model {
     next()
   }
 
-  * create(values) {
+  static * create(values) {
+    proton.log.debug('new like', values)
     const like = new this(values)
     return like.save()
   }

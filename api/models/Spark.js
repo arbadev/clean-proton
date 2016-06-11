@@ -9,7 +9,7 @@
     three: { decision: Boolean },
   }
   const mateSchema = {
-    user: { type: Model.types.ObjectId, required: true },
+    user: { type: Model.types.ObjectId, required: true, ref: 'User' },
     levels: levelSchema,
   }
 
@@ -56,37 +56,37 @@
    * @param from: this always will be the client which want to start the next lv
    * @param level: {two: { decision: true, message: 'url' } }
    */
-    static * updateLevel(id, userId, level) {
-      const criteria = { _id: new Model.types.ObjectId(id) }
-      const spark = yield Spark.findOne(criteria)
-      const sparkMate = spark.from.user == userId ? spark.to : spark.from
-      const [levelName] = Object.getOwnPropertyNames(level)
-      const decision = level[levelName].decision
-      let status = ''
-
-      if (!decision) {
-        status = 'terminated'
-      } else if (sparkMate.levels[levelName] && sparkMate.levels[levelName].decision) {
-        status = levelName
-      } else {
-        status = spark.status
-      }
-
-      const key = spark.from.user == userId ? 'from' : 'to'
-      const keyLevels = `${key}.levels`
-      const updateData = {
-        status,
-        [keyLevels]: Object.assign({}, spark[key].levels, level),
-      }
-
-      const updatedSpark = yield Spark.findOneAndUpdate(criteria, updateData, { new: true })
-      const pushMessage = {
-        event: 'update spark',
-        data: { _id: id },
-      }
-      const { NotificationService } = proton.app.services
-      NotificationService.sendPush(sparkMate.user, pushMessage)
-      return Promise.resolve(updatedSpark)
-    }
+    // static * updateLevel(id, userId, level) {
+    //   const criteria = { _id: new Model.types.ObjectId(id) }
+    //   const spark = yield Spark.findOne(criteria)
+    //   const sparkMate = spark.from.user == userId ? spark.to : spark.from
+    //   const [levelName] = Object.getOwnPropertyNames(level)
+    //   const decision = level[levelName].decision
+    //   let status = ''
+    //
+    //   if (!decision) {
+    //     status = 'terminated'
+    //   } else if (sparkMate.levels[levelName] && sparkMate.levels[levelName].decision) {
+    //     status = levelName
+    //   } else {
+    //     status = spark.status
+    //   }
+    //
+    //   const key = spark.from.user == userId ? 'from' : 'to'
+    //   const keyLevels = `${key}.levels`
+    //   const updateData = {
+    //     status,
+    //     [keyLevels]: Object.assign({}, spark[key].levels, level),
+    //   }
+    //
+    //   const updatedSpark = yield Spark.findOneAndUpdate(criteria, updateData, { new: true })
+    //   const pushMessage = {
+    //     event: 'update spark',
+    //     data: { _id: id },
+    //   }
+    //   const { NotificationService } = proton.app.services
+    //   NotificationService.sendPush(sparkMate.user, pushMessage)
+    //   return Promise.resolve(updatedSpark)
+    // }
 
 }

@@ -10,6 +10,7 @@ export default class AuthController extends Controller {
       const token = yield Token.generate(this.request.user.id)
       response.token = token.value
       response.user = yield User.findOneById(token.user)
+      proton.log.debug('auth response', response)
       this.response.body = response
     } catch (err) {
       proton.log.error(err)

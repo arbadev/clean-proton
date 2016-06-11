@@ -142,14 +142,17 @@ export default class UserController extends Controller {
    * @author Carlos Marcano
    */
   * findSparkd() {
+    proton.log.debug('findSparkd')
     try {
-      const { sparkId } = this.params
+      const { sparkdId } = this.params
       const { user } = this.request
       const criteria = {
-        _id: sparkId,
-        mates: user._id,
+        _id: sparkdId,
+        'mates.user': user._id,
       }
-      this.response.body = Spark.findOne(criteria)
+      const spark = yield Spark.findOne(criteria).populate('mates.user')
+      proton.log.debug('spark.toJSON', spark.toJSON())
+      this.response.body = spark
     } catch (err) {
       proton.log.error('UserController.findSparkd', err)
       this.response.status = 400
