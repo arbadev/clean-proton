@@ -9,9 +9,9 @@ export default class UserController extends Controller {
    *
    */
   * find() {
-    const { query } = this
+    // const { query } = this
     try {
-      this.response.body = yield User.find()
+      this.response.body = yield User.find({ _id: { $ne: this.request.user._id } })
       // this.response.body = yield User.findByQueryParams(query, this.request.user)
     } catch (err) {
       proton.log.error('UserController.find', err)
