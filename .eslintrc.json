@@ -7,6 +7,7 @@
     "Language": true,
     "User": true,
     "Token": true,
+    "Like": true,
     "describe": true,
     "it": true
   },

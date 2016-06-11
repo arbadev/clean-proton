@@ -2,7 +2,6 @@
 
   import Model from 'proton-mongoose-model'
 
-
   const statuses = ['one', 'two,', 'three', 'finishied']
   const levelSchema = {
     one: { decision: Boolean },
@@ -26,15 +25,14 @@
       }
     }
 
-
-    afterCreate(record, next) {
+    * afterCreate(record, next) {
       const pushMessage = {
-        event: 'update spark',
-        data: { spark: record._id },
+        event: 'new spark',
+        data: { spark: record.id },
       }
       const { NotificationService } = proton.app.services
-      NotificationService.sendPush(record.mates[0], pushMessage)
-      NotificationService.sendPush(record.mates[1], pushMessage)
+      yield NotificationService.sendPush(record.mates[0].user, pushMessage)
+      yield NotificationService.sendPush(record.mates[1].user, pushMessage)
       next()
     }
 
@@ -44,10 +42,9 @@
    answers, otherwise create a new spark with the undefined status waiting for
    the other User asnwer
    * @author Andres Barradas <andres@nucleos.io>
-   * @param from: this always will be the client who ask for a relationship
-   * @param to: is the user which its asked for a relationship
    */
     static * create(values) {
+      proton.log.debug('create spark', values)
       const spark = new this(Object.assign({}, { status: 'one' }, values))
       return spark.save()
     }

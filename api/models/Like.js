@@ -23,8 +23,8 @@ export default class Like extends Model {
     }
     const likeToMe = yield this.model.findOne(criteria)
     if (likeToMe) {
-      const mates = [likeToMe.from, record.from]
-      Spark.create({ mates })
+      const mates = [{ user: likeToMe.from }, { user: record.from }]
+      yield Spark.create({ mates })
     }
     next()
   }
