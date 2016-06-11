@@ -3,27 +3,39 @@
   import Model from 'proton-mongoose-model'
 
 
-  const statuses = ['undefined', 'one', 'two,', 'three', 'terminated']
+  const statuses = ['one', 'two,', 'three', 'finishied']
   const levelSchema = {
     one: { decision: Boolean },
     two: { decision: Boolean, message: String },
     three: { decision: Boolean },
+  }
+  const mateSchema = {
+    user: { type: Model.types.ObjectId, required: true },
+    levels: levelSchema,
   }
 
   export default class Spark extends Model {
 
     schema() {
       return {
-        from: {
-          user: { type: Model.types.ObjectId, required: true },
-          levels: levelSchema,
+        mates: [mateSchema],
+        status: {
+          type: String,
+          enum: statuses,
         },
-        to: {
-          user: { type: Model.types.ObjectId, required: true },
-          levels: levelSchema,
-        },
-        status: { type: String, enum: statuses, default: 'undefined' },
       }
+    }
+
+
+    afterCreate(record, next) {
+      const pushMessage = {
+        event: 'update spark',
+        data: { spark: record._id },
+      }
+      const { NotificationService } = proton.app.services
+      NotificationService.sendPush(record.mates[0], pushMessage)
+      NotificationService.sendPush(record.mates[1], pushMessage)
+      next()
     }
 
   /**
@@ -35,22 +47,8 @@
    * @param from: this always will be the client who ask for a relationship
    * @param to: is the user which its asked for a relationship
    */
-    static * create({ from, to }) {
-      const { decision } = from.levels.one
-      const criteria = {
-        'from.user': to.user,
-        'to.user': from.user,
-      }
-      const updateData = {
-        status: decision ? 'one' : 'terminated',
-        to: { 'levels.one.decision': decision },
-      }
-      let spark = yield this.findOneAndUpdate(criteria, updateData, { new: true })
-      if (spark) return Promise.resolve(spark)
-
-    // the spark doesnt exist
-      const status = decision ? 'undefined' : 'terminated'
-      spark = new this({ from, to, status })
+    static * create(values) {
+      const spark = new this(Object.assign({}, { status: 'one' }, values))
       return spark.save()
     }
 

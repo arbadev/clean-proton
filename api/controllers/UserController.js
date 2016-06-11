@@ -11,7 +11,8 @@ export default class UserController extends Controller {
   * find() {
     const { query } = this
     try {
-      this.response.body = yield User.findQ(query)
+      this.response.body = yield User.find()
+      // this.response.body = yield User.findByQueryParams(query, this.request.user)
     } catch (err) {
       proton.log.error('UserController.find', err)
       this.response.status = 400
@@ -39,7 +40,8 @@ export default class UserController extends Controller {
    */
   * findMe() {
     try {
-      this.response.body = {}
+      const userId = this.request.user._id
+      this.response.body = yield User.findOne({ _id: userId })
     } catch (err) {
       proton.log.error('UserController.findMe', err)
       this.response.status = 400
@@ -52,9 +54,43 @@ export default class UserController extends Controller {
    */
   * updateMe() {
     try {
-      this.response.body = {}
+      const userId = this.request.user._id
+      const values = this.request.body
+      this.response.body = yield User.updateOne(userId, values)
     } catch (err) {
-      proton.log.error('UserController.findMe', err)
+      proton.log.error('UserController.updateMe', err)
+      this.response.status = 400
+    }
+  }
+
+  /**
+   *
+   */
+  * uploadAvatar() {
+    const userId = this.request.user._id
+    const { StorageService } = proton.app.services
+    try {
+      const [avatar] = yield StorageService.upload(this.req.files.avatar)
+      const user = yield User.updateOne(userId, { avatar })
+      this.response.body = user
+    } catch (err) {
+      proton.log.error('UserController.uploadAvatar', err)
+      this.response.status = 400
+    }
+  }
+
+   /**
+    *
+    */
+  * uploadMessage() {
+    const userId = this.request.user._id
+    const { StorageService } = proton.app.services
+    try {
+      const [message] = yield StorageService.upload(this.req.files.message)
+      const user = yield User.updateOne(userId, { message })
+      this.response.body = user
+    } catch (err) {
+      proton.log.error('UserController.uploadMessage', err)
       this.response.status = 400
     }
   }
@@ -65,7 +101,8 @@ export default class UserController extends Controller {
    */
   * findOne() {
     try {
-      this.response.body = {}
+      const userId = this.params.userId
+      this.response.body = yield User.findOne({ _id: userId })
     } catch (err) {
       proton.log.error('UserController.findOne', err)
       this.response.status = 400
@@ -106,7 +143,13 @@ export default class UserController extends Controller {
    */
   * findSparkd() {
     try {
-      this.response.body = {}
+      const { sparkId } = this.params
+      const { user } = this.request
+      const criteria = {
+        _id: sparkId,
+        mates: user._id,
+      }
+      this.response.body = Spark.findOne(criteria)
     } catch (err) {
       proton.log.error('UserController.findSparkd', err)
       this.response.status = 400

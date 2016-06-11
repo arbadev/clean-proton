@@ -12,6 +12,7 @@ export default class User extends Model {
       lastName: String,
       avatar: String,
       message: String,
+      age: Number,
       status: {
         type: String,
         enum: ['on', 'off'],
@@ -32,6 +33,12 @@ export default class User extends Model {
       coordinates: {
         type: [Number],
         index: '2d',
+      },
+      languages: {
+        type: [ObjectId],
+      },
+      preferences: {
+        type: Model.types.Mixed,
       },
     }
   }
@@ -94,7 +101,7 @@ export default class User extends Model {
   *
   *
   */
-  static * findWithQuery(query) {
+  static * findByQueryParams(query) {
     const { sparkiesOf, sparkStatus, addNervay } = query
     if (sparkiesOf) {
       const id = ObjectId.isValid(sparkiesOf) ? new ObjectId(sparkiesOf) : null
