@@ -101,7 +101,7 @@ export default class UserController extends Controller {
    */
   * findOne() {
     try {
-      const userId = this.params.userId
+      const { userId } = this.params
       this.response.body = yield User.findOne({ _id: userId })
     } catch (err) {
       proton.log.error('UserController.findOne', err)
@@ -115,7 +115,7 @@ export default class UserController extends Controller {
    */
   * destroy() {
     try {
-      const user = yield User.destroy(this.params.id)
+      const user = yield User.destroy(this.params.userId)
       this.response.body = user
       this.response.status = !user ? 404 : 200
     } catch (err) {
