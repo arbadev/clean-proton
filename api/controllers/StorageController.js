@@ -2,13 +2,13 @@
 
 import Controller from 'proton-controller'
 
-export default class CloudinaryController extends Controller {
+export default class StorageController extends Controller {
 
-  * getSignature() {
+  * createCloudinarySignature() {
     try {
       const {CloudinaryService} = proton.app.services
       const response = CloudinaryService.generateSignatureObject()
-      this.response.status = 200
+      this.response.status = 201
       this.response.body = response
     } catch(err) {
       proton.log.debug(err)
