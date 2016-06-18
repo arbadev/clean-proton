@@ -2,6 +2,7 @@
 
 require('babel-polyfill')
 require('babel-core/register')
+require('dotenv').config();
 
 const Proton = require('proton-koa')
 const api = require('./api')

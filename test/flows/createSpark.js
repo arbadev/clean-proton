@@ -6,7 +6,7 @@ import Model from 'proton-mongoose-model'
 // Declarative section
 const { ObjectId } = Model.adapter.Types
 
-describe('All flow for create a spark', () => {
+describe.skip('All flow for create a spark', () => {
   it('createSpark', function*() {
     const user1 = new ObjectId()
     const user2 = new ObjectId()

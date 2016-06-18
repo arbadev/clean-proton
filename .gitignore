@@ -34,7 +34,6 @@ jspm_packages
 .node_repl_history
 
 # temporal files
-<<<<<<< HEAD
  .tmp/
  tmp/
  .tmp
@@ -42,7 +41,6 @@ jspm_packages
 
 #visual studio code
 .vscode/
-=======
 .tmp/
 tmp/
 .tmp
@@ -50,4 +48,3 @@ tmp
 
 # env file
 .env
->>>>>>> develop
