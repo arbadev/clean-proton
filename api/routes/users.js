@@ -12,7 +12,7 @@ router.patch('/me', AuthPolicies.bearer, UserController.updateMe)
 router.put('/me/avatar', AuthPolicies.bearer, UserController.uploadAvatar)
 router.put('/me/message', AuthPolicies.bearer, UserController.uploadMessage)
 router.get('/:userId', AuthPolicies.bearerWithoutUser, UserController.findOne)
-router.delete('/:userId', AuthPolicies.bearerWithoutUser, UserController.destroy)
+router.delete('/:userId', UserController.destroy)
 
 /*   /users/me/sparkds  */
 router.get('/me/sparkds', AuthPolicies.bearer, UserController.findSparkds)
