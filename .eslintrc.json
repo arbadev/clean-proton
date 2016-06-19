@@ -1,0 +1,20 @@
+{
+  "extends": "airbnb-base",
+  "globals": {
+    "proton": true,
+    "passport": true,
+    "Spark": true,
+    "Language": true,
+    "User": true,
+    "Token": true,
+    "Like": true,
+    "describe": true,
+    "it": true
+  },
+  "rules": {
+    "func-names": 0,
+    "semi": ["error", "never"],
+    "strict": 0,
+    "no-underscore-dangle": ["error", { "allow": ["_id"] }]
+  }
+}

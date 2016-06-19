@@ -38,3 +38,13 @@ jspm_packages
  tmp/
  .tmp
  tmp
+
+#visual studio code
+.vscode/
+.tmp/
+tmp/
+.tmp
+tmp
+
+# env file
+.env

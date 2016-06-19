@@ -9,7 +9,7 @@ export default class Token extends Model {
     return {
       user: String,
       value: String,
-      scope: String
+      scope: String,
     }
   }
 
@@ -20,15 +20,15 @@ export default class Token extends Model {
   */
   static generate(user) {
     const token = new this({
-      user:  user,
+      user,
       value: hat(),
-      scope: '*'
+      scope: '*',
     })
     return token.save()
   }
 
   static findOneByValue(value) {
-    return this.findOne({value})
+    return this.findOne({ value })
   }
 
 }

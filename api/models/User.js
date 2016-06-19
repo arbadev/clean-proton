@@ -1,10 +1,8 @@
 'use strict'
 
 import Model from 'proton-mongoose-model'
-import MongooseQuark from 'proton-quark-mongoose'
 
-const mongoose = MongooseQuark.mongoose()
-const ObjectId = mongoose.Types.ObjectId
+const { ObjectId } = Model.types
 
 export default class User extends Model {
 
@@ -12,11 +10,47 @@ export default class User extends Model {
     return {
       firstName: String,
       lastName: String,
-      email: {type: String, unique: true},
-      facebookId: {type: String, unique: true},
       avatar: String,
-      message: String
+      message: String,
+      age: Number,
+      status: {
+        type: String,
+        enum: ['on', 'off'],
+        default: 'on',
+      },
+      gender: {
+        type: String,
+        enum: ['woman', 'man'],
+      },
+      email: {
+        type: String,
+        unique: true,
+      },
+      facebookId: {
+        type: String,
+        unique: true,
+      },
+      coordinates: {
+        type: [Number],
+        index: '2d',
+      },
+      languages: {
+        type: [ObjectId],
+      },
+      preferences: {
+        type: Model.types.Mixed,
+      },
     }
+  }
+
+  /**
+   *
+   *
+   */
+  static me(id) {
+    const { Util } = proton.app.services
+    const _id = Util.getObjectId(id)
+    return this.findOne({ _id })
   }
 
   /**
@@ -24,20 +58,26 @@ export default class User extends Model {
    * @description find a user for any of its unique identifiers
    */
   static findOneById(id) {
-    const _id = ObjectId.isValid(id) ? new ObjectId(id) : null
+    const { Util } = proton.app.services
+    const _id = Util.getObjectId(id)
     const criteria = {
       $or: [
-        {_id},
-        {email: id},
-        {facebookId: id}
-      ]
+        { _id },
+        { email: id },
+        { facebookId: id },
+      ],
     }
     return this.findOne(criteria)
   }
 
+  /**
+   *
+   *
+   */
   static updateOne(id, opts) {
-    const _id = ObjectId.isValid(id) ? new ObjectId(id) : null
-    return this.findOneAndUpdate(_id, opts, {new:true})
+    const { Util } = proton.app.services
+    const _id = Util.getObjectId(id)
+    return this.findOneAndUpdate({ _id }, opts, { new: true })
   }
 
   /**
@@ -45,15 +85,36 @@ export default class User extends Model {
    *
    */
   static destroy(id) {
-    const _id = ObjectId.isValid(id) ? new ObjectId(id) : null
+    const { Util } = proton.app.services
+    const _id = Util.getObjectId(id)
     const criteria = {
       $or: [
-        {_id},
-        {email: id},
-        {facebookId: id}
-      ]
+        { _id },
+        { email: id },
+        { facebookId: id },
+      ],
     }
     return this.findOneAndRemove(criteria)
+  }
+
+  /**
+  *
+  *
+  */
+  static * findByQueryParams(query) {
+    const { sparkiesOf, sparkStatus, addNervay } = query
+    if (sparkiesOf) {
+      const id = ObjectId.isValid(sparkiesOf) ? new ObjectId(sparkiesOf) : null
+      const criteria = {
+        status: sparkStatus,
+        $or: [
+          { from: { user: id } },
+          { to: { user: id } },
+        ],
+      }
+      const sparkies = yield Spark.find(criteria)
+    }
+    return this.findOneAndRemove()
   }
 
 }

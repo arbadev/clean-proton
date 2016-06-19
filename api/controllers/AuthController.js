@@ -5,12 +5,12 @@ import Controller from 'proton-controller'
 export default class AuthController extends Controller {
 
   * authenticate() {
-    proton.log.debug('authenticate', this.request.body)
     const response = {}
     try {
       const token = yield Token.generate(this.request.user.id)
       response.token = token.value
-      response.user  = yield User.findOneById(token.user)
+      response.user = yield User.findOneById(token.user)
+      proton.log.debug('auth response', response)
       this.response.body = response
     } catch (err) {
       proton.log.error(err)

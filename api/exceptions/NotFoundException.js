@@ -1,12 +1,5 @@
 'use strict'
 
-let Exception = require('proton-exception')
+import Exception from 'proton-exception'
 
-
-class NotFoundException extends Exception {
-  constructor(message) {
-    super(message)
-  }
-}
-
-module.exports = NotFoundException
+export default class NotFoundException extends Exception {}

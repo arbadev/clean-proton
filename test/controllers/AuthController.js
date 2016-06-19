@@ -1,20 +1,16 @@
-'use strict'
-
+/* eslint max-len: 0 */
 import supertest from 'co-supertest'
 import app from '../../server.js'
 
 // Declarative section
 const request = supertest(app)
-const facebookToken = 'CAAIjRkSocuoBAMTvlOtxfHccCnCaxsbpeZCI5OH69xu4eDYIbzNc4As3hpsoX2ZBkFq0XWfNdvVEnqW2RlJbpp6f83rUwnB48AZCIPcQai3493b2vPt7oUTZAZAesveQnbcLd9xmlj92s8hmCIdfd7OwC7p3txW2ZBVZCFVS2TbV3QpzWu2mK6fbFGt1tzqKjsG6XSQspGR3QSZCzSUZB7c1JIHGeZCu5UqC4YhTmWNSMlyAZDZD'
+const facebookToken = 'EAAIjRkSocuoBAFOIknNBV9aZC9Y5QZAVjoDwFOlFdbHB6iZBKgdS2L4AZCp0Nj2CQYougj3XF1NVJKXZAmNtzrFdvZAiFZC75UfK9l0fbj3IA7hFo2ME3rr3ZBPuJEX4oxsmCznQRO7TG4VrVEGgwfgMT38SP9Rl1px0hO2KAuNCXKJZCP24HKrSaZAyZCfOkBuZAxFQvRf05873YQIwOMqEj4UW'
 
-
-describe('AuthController', () => {
-
+describe.skip('AuthController', () => {
   it('authenticate', function*() {
-    const response = yield request
+    yield request
       .post('/auth')
-      .send({access_token: facebookToken})
+      .send({ access_token: facebookToken })
       .expect(200)
   })
-
 })
