@@ -29,25 +29,31 @@ describe('All flow for create a user', () => {
       .set('Authorization', `Bearer ${resAuth.body.token}`)
       .send(user)
       .expect(201)
-    proton.log.debug('User response', resUser.body)
+    proton.log.debug('Create user', resUser.body)
 
     const resAvatar = yield request
       .put('/users/me/avatar')
       .attach('avatar', 'test/fixtures/avatar-tony.png')
       .set('Authorization', `Bearer ${resAuth.body.token}`)
       .expect(200)
-    proton.log.debug('Avatar response', resAvatar.body)
+    proton.log.debug('Update avatar', resAvatar.body)
 
     const resMessage = yield request
        .put('/users/me/message')
        .attach('message', 'test/fixtures/avatar-tony.png')
        .set('Authorization', `Bearer ${resAuth.body.token}`)
        .expect(200)
-    proton.log.debug('Message response', resMessage.body)
+    proton.log.debug('Update message', resMessage.body)
+
+    const resGetUser = yield request
+      .get('/users?gender=man')
+      .set('Authorization', `Bearer ${resAuth.body.token}`)
+      .expect(200)
+    proton.log.debug('List users', resGetUser.body)
 
     const resDel = yield request
        .delete(`/users/${user.facebookId}`)
        .expect(200)
-    proton.log.debug('Delete user response', resDel.body)
+    proton.log.debug('Delete user', resDel.body)
   })
 })

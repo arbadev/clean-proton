@@ -48,8 +48,7 @@ export default class User extends Model {
    *
    */
   static me(id) {
-    const { Util } = proton.app.services
-    const _id = Util.getObjectId(id)
+    const _id = Model.parseObjectId(id)
     return this.findOne({ _id })
   }
 
@@ -58,8 +57,7 @@ export default class User extends Model {
    * @description find a user for any of its unique identifiers
    */
   static findOneById(id) {
-    const { Util } = proton.app.services
-    const _id = Util.getObjectId(id)
+    const _id = Model.parseObjectId(id)
     const criteria = {
       $or: [
         { _id },
@@ -75,8 +73,7 @@ export default class User extends Model {
    *
    */
   static updateOne(id, opts) {
-    const { Util } = proton.app.services
-    const _id = Util.getObjectId(id)
+    const _id = Model.parseObjectId(id)
     return this.findOneAndUpdate({ _id }, opts, { new: true })
   }
 
@@ -85,8 +82,7 @@ export default class User extends Model {
    *
    */
   static destroy(id) {
-    const { Util } = proton.app.services
-    const _id = Util.getObjectId(id)
+    const _id = Model.parseObjectId(id)
     const criteria = {
       $or: [
         { _id },
@@ -102,19 +98,82 @@ export default class User extends Model {
   *
   */
   static * findByQueryParams(query) {
-    const { sparkiesOf, sparkStatus, addNervay } = query
-    if (sparkiesOf) {
-      const id = ObjectId.isValid(sparkiesOf) ? new ObjectId(sparkiesOf) : null
-      const criteria = {
-        status: sparkStatus,
-        $or: [
-          { from: { user: id } },
-          { to: { user: id } },
-        ],
-      }
-      const sparkies = yield Spark.find(criteria)
-    }
-    return this.findOneAndRemove()
+    const criteria = yield this._buildCriteriaByQueryParams(query)
+    proton.log.debug('criteria to find users', criteria)
+    return this.find(criteria)
   }
 
+  // ---------------------------------------------------------------------------
+  // ---------------------------------------------------------------------------
+  // Private methods
+  // ---------------------------------------------------------------------------
+  // ---------------------------------------------------------------------------
+
+  /**
+   *
+   *
+   */
+  static * _buildCriteriaByQueryParams(query) {
+    return Object.assign(
+      {},
+      yield this._getExcludedUsersCriteria(query),
+      yield this._getOrderCriteria(query),
+      yield this._getGenderCriteria(query),
+      yield this._getAgeCriteria(query)
+    )
+  }
+
+  /**
+   *
+   *
+   */
+  static * _getExcludedUsersCriteria({ user }) {
+    const userId = Model.parseObjectId(user._id)
+
+    // Users excluded by dislike
+    const dislikeCriteria = {
+      value: 'dislike',
+      $or: [{ from: userId }, { to: userId }],
+    }
+    const dislikes = yield Like.find(dislikeCriteria)
+    const dislikeIds = dislikes.map(({ from, to }) => {
+      return to === userId ? from : to
+    })
+
+    // Users excluded by existing spark
+    const sparkCriteria = {
+      'mates.user': userId,
+    }
+    const sparks = yield Spark.find(sparkCriteria)
+    const sparkIds = sparks.map(spark => {
+      const [from, to] = spark.mates
+      return to.user === userId ? from.user : to.user
+    })
+
+    return { _id: { $ne: [userId].concat(sparkIds, dislikeIds) } }
+  }
+
+  /**
+   *
+   *
+   */
+  static _getOrderCriteria(query) {
+    return {}
+  }
+
+  /**
+   *
+   *
+   */
+  static _getGenderCriteria({ gender }) {
+    return gender ? { gender } : {}
+  }
+
+  /**
+   *
+   *
+   */
+  static _getAgeCriteria({ age }) {
+    return {}
+  }
 }

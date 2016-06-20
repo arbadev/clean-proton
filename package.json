@@ -28,7 +28,7 @@
     "proton-controller": "^1.0.6",
     "proton-exception": "^1.0.9",
     "proton-koa": "^1.2.3",
-    "proton-mongoose-model": "^1.0.6",
+    "proton-mongoose-model": "^1.1.4",
     "proton-policy": "1.0.5",
     "proton-quark-mongoose": "^1.1.2",
     "proton-quark-multer": "^1.1.7",
