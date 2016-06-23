@@ -78,7 +78,7 @@ export default class User extends Model {
   static updateOne(id, opts) {
     const { Util } = proton.app.services
     const _id = Util.getObjectId(id)
-    return this.findOneAndUpdate({ _id }, opts, { new: true })
+    return this.findOneAndUpdate({ _id }, opts, { new: true }).populate('languages')
   }
 
   /**
