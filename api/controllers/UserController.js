@@ -41,7 +41,7 @@ export default class UserController extends Controller {
   * findMe() {
     try {
       const userId = this.request.user._id
-      this.response.body = yield User.findOne({ _id: userId })
+      this.response.body = yield User.me(userId)
     } catch (err) {
       proton.log.error('UserController.findMe', err)
       this.response.status = 400
