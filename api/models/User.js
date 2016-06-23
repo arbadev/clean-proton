@@ -79,6 +79,7 @@ export default class User extends Model {
     const { Util } = proton.app.services
     const _id = Util.getObjectId(id)
     return this.findOneAndUpdate({ _id }, opts, { new: true })
+  }
 
   /**
    *
