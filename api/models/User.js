@@ -79,7 +79,7 @@ export default class User extends Model {
     const { Util } = proton.app.services
     const _id = Util.getObjectId(id)
     return this.update({ _id }, values, { new: true })
-      .then(([user]) => this.me(user._id))
+      .then(() => this.me(_id))
   }
 
   /**
