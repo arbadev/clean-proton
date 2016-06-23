@@ -57,7 +57,10 @@ export default class UserController extends Controller {
       const userId = this.request.user._id
       const values = this.request.body
       proton.log.info('Values to update', values)
-      this.response.body = yield User.updateOne(userId, values)
+      const userUpdated = yield User.updateOne(userId, values)
+      proton.log.info('userUpdated', userUpdated)
+      this.response.body = userUpdated
+      this.response.status = 200
     } catch (err) {
       proton.log.error('UserController.updateMe', err)
       this.response.status = 400
