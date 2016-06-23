@@ -79,6 +79,8 @@ export default class User extends Model {
     const { Util } = proton.app.services
     const _id = Util.getObjectId(id)
     return this.findOneAndUpdate({ _id }, values, { new: true })
+      .then(user => Promise.all([user, Language.find({ _id: user.languages })]))
+      .then(([user, languages]) => Object.assign({}, user, { languages }))
   }
 
   /**
