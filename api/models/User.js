@@ -36,6 +36,7 @@ export default class User extends Model {
       },
       languages: {
         type: [ObjectId],
+        ref: 'Language',
       },
       preferences: {
         type: Model.types.Mixed,
