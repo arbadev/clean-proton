@@ -10,7 +10,7 @@ export default class BearerStrategy extends Strategy {
 
   static strategy(token, done) {
     Token.findOneByValue(token)
-      .then(token => Promise.all([token, User.findOneById(token.user)]))
+      .then(token => Promise.all([token, User.me(token.user)]))
       .then(([token, user]) => {
         if (!user) return done(null, user, 'without user')
         return done(null, user, token.scope)
