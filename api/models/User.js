@@ -84,7 +84,7 @@ export default class User extends Model {
         const languages = Language.find({ _id: { $in: user.languages }})
         return Promise.all([user, languages])
       })
-      .then(([user, languages]) => Object.assign(user, { languages }))
+      .then(([user, languages]) => Object.assign({}, user._doc, { languages }))
   }
 
   /**
