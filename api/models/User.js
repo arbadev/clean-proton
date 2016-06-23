@@ -35,7 +35,7 @@ export default class User extends Model {
         index: '2d',
       },
       languages: [{
-        type: ObjectId,
+        type: Model.types.ObjectId,
         ref: 'Language',
       }],
       preferences: {
@@ -51,7 +51,7 @@ export default class User extends Model {
   static me(id) {
     const { Util } = proton.app.services
     const _id = Util.getObjectId(id)
-    return this.findOne({ _id })
+    return this.findOne({ _id }).populate('languages')
   }
 
   /**
