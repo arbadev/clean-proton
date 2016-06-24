@@ -69,6 +69,11 @@ export default class User extends Model {
       ],
     }
     return this.findOne(criteria)
+      .then(user => {
+        if (!user) return null
+        return Language.find({ _id: { $in: user.languages } })
+          .then(languages => Object.assign({}, user._doc, { languages }))
+      })
   }
 
   /**
@@ -80,8 +85,7 @@ export default class User extends Model {
     const _id = Util.getObjectId(id)
     return this.findOneAndUpdate({ _id }, values, { new: true })
       .then(user => {
-        // const languagesIds = user.languages.map(lang => Model.parseObjectId(lang))
-        const languages = Language.find({ _id: { $in: user.languages }})
+        const languages = Language.find({ _id: { $in: user.languages } })
         return Promise.all([user, languages])
       })
       .then(([user, languages]) => Object.assign({}, user._doc, { languages }))
