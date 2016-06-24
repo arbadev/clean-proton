@@ -68,12 +68,7 @@ export default class User extends Model {
         { facebookId: id },
       ],
     }
-    return this.findOne(criteria)
-      .then(user => {
-        if (!user) return null
-        return Language.find({ _id: { $in: user.languages } })
-          .then(languages => Object.assign({}, user._doc, { languages }))
-      })
+    return this.findOne(criteria).populate('languages')
   }
 
   /**
@@ -83,12 +78,7 @@ export default class User extends Model {
   static updateOne(id, values) {
     const { Util } = proton.app.services
     const _id = Util.getObjectId(id)
-    return this.findOneAndUpdate({ _id }, values, { new: true })
-      .then(user => {
-        const languages = Language.find({ _id: { $in: user.languages } })
-        return Promise.all([user, languages])
-      })
-      .then(([user, languages]) => Object.assign({}, user._doc, { languages }))
+    return this.findOneAndUpdate({ _id }, values, { new: true }).populate('languages')
   }
 
   /**

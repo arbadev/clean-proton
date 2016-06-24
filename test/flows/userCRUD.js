@@ -44,6 +44,12 @@ describe('All flow for create a user', () => {
     printResponse('PUT /users/me (update languages)')
 
     response = yield request
+      .get('/users')
+      .set('Authorization', `Bearer ${token}`)
+      .expect(200)
+    printResponse('GET /users')
+
+    response = yield request
       .get('/users/me')
       .set('Authorization', `Bearer ${token}`)
       .expect(200)
