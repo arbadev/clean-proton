@@ -2,14 +2,12 @@
 
 import Model from 'proton-mongoose-model'
 
-const { ObjectId } = Model.adapter.Types
-
 export default class Like extends Model {
 
   schema() {
     return {
-      from: String,
-      to: String,
+      from: { type: Model.types.ObjectId, required: true, ref: 'User' },
+      to: { type: Model.types.ObjectId, required: true, ref: 'User' },
       value: {
         type: String,
         enum: ['like', 'dislike'],
