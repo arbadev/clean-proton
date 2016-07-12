@@ -9,10 +9,10 @@ export default class UserController extends Controller {
    *
    */
   * find() {
-    // const { query } = this
+    const { user } = this.request
+    const query = Object.assign({}, this.query, { user })
     try {
-      this.response.body = yield User.find({ _id: { $ne: this.request.user._id } })
-      // this.response.body = yield User.findByQueryParams(query, this.request.user)
+      this.response.body = yield User.findByQueryParams(query)
     } catch (err) {
       proton.log.error('UserController.find', err)
       this.response.status = 400
@@ -41,7 +41,7 @@ export default class UserController extends Controller {
   * findMe() {
     try {
       const userId = this.request.user._id
-      this.response.body = yield User.findOne({ _id: userId })
+      this.response.body = yield User.me(userId)
     } catch (err) {
       proton.log.error('UserController.findMe', err)
       this.response.status = 400
@@ -56,7 +56,9 @@ export default class UserController extends Controller {
     try {
       const userId = this.request.user._id
       const values = this.request.body
-      this.response.body = yield User.updateOne(userId, values)
+      const userUpdated = yield User.updateOne(userId, values)
+      this.response.body = userUpdated
+      this.response.status = 200
     } catch (err) {
       proton.log.error('UserController.updateMe', err)
       this.response.status = 400
@@ -101,8 +103,8 @@ export default class UserController extends Controller {
    */
   * findOne() {
     try {
-      const userId = this.params.userId
-      this.response.body = yield User.findOne({ _id: userId })
+      const { userId } = this.params
+      this.response.body = yield User.findOneById(userId)
     } catch (err) {
       proton.log.error('UserController.findOne', err)
       this.response.status = 400
@@ -115,7 +117,7 @@ export default class UserController extends Controller {
    */
   * destroy() {
     try {
-      const user = yield User.destroy(this.params.id)
+      const user = yield User.destroy(this.params.userId)
       this.response.body = user
       this.response.status = !user ? 404 : 200
     } catch (err) {
@@ -142,7 +144,6 @@ export default class UserController extends Controller {
    * @author Carlos Marcano
    */
   * findSparkd() {
-    proton.log.debug('findSparkd')
     try {
       const { sparkdId } = this.params
       const { user } = this.request
@@ -151,7 +152,6 @@ export default class UserController extends Controller {
         'mates.user': user._id,
       }
       const spark = yield Spark.findOne(criteria).populate('mates.user')
-      proton.log.debug('spark.toJSON', spark.toJSON())
       this.response.body = spark
     } catch (err) {
       proton.log.error('UserController.findSparkd', err)
