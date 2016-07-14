@@ -10,7 +10,12 @@ export default class User extends Model {
       lastName: String,
       avatar: String,
       message: String,
-      age: Number,
+      ageRange: {
+        type: {
+          min: String,
+          max: String,
+        },
+      },
       status: {
         type: String,
         enum: ['on', 'off'],
@@ -18,7 +23,7 @@ export default class User extends Model {
       },
       gender: {
         type: String,
-        enum: ['woman', 'man'],
+        enum: ['male', 'female', 'other'],
       },
       email: {
         type: String,
