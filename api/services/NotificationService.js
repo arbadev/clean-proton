@@ -11,7 +11,7 @@ export default class NotificationService extends Service {
       value: recipient,
     }]
     const push = yield pushClient.setTags(tags).setData(data).setAsBackground().send()
-    proton.log.debug('Sent push', tags, data, push)
+    proton.log.info('Sent push', tags, data, push)
     return push
   }
 }

@@ -26,13 +26,13 @@
     }
 
     * afterCreate(record, next) {
-      const pushMessage = {
-        event: 'new spark',
-        data: { spark: record.id },
-      }
+      const [firstMate, secondMate] = record.mates
+      proton.log.info(`A new spark has been created
+        between ${firstMate.user} and ${secondMate.user}`)
+      const pushMessage = { event: 'new spark', data: { spark: record.id } }
       const { NotificationService } = proton.app.services
-      yield NotificationService.sendPush(record.mates[0].user, pushMessage)
-      yield NotificationService.sendPush(record.mates[1].user, pushMessage)
+      yield NotificationService.sendPush(firstMate.user, pushMessage)
+      yield NotificationService.sendPush(secondMate.user, pushMessage)
       next()
     }
 
@@ -44,49 +44,7 @@
    * @author Andres Barradas <andres@nucleos.io>
    */
     static * create(values) {
-      proton.log.debug('create spark', values)
       const spark = new this(Object.assign({}, { status: 'one' }, values))
       return spark.save()
     }
-
-  /**
-   * @description this method gets the params (from , to), and find a spark where
-   the users are and update their relationship
-   * @author Andres Barradas <andres@nucleos.io>
-   * @param from: this always will be the client which want to start the next lv
-   * @param level: {two: { decision: true, message: 'url' } }
-   */
-    // static * updateLevel(id, userId, level) {
-    //   const criteria = { _id: new Model.types.ObjectId(id) }
-    //   const spark = yield Spark.findOne(criteria)
-    //   const sparkMate = spark.from.user == userId ? spark.to : spark.from
-    //   const [levelName] = Object.getOwnPropertyNames(level)
-    //   const decision = level[levelName].decision
-    //   let status = ''
-    //
-    //   if (!decision) {
-    //     status = 'terminated'
-    //   } else if (sparkMate.levels[levelName] && sparkMate.levels[levelName].decision) {
-    //     status = levelName
-    //   } else {
-    //     status = spark.status
-    //   }
-    //
-    //   const key = spark.from.user == userId ? 'from' : 'to'
-    //   const keyLevels = `${key}.levels`
-    //   const updateData = {
-    //     status,
-    //     [keyLevels]: Object.assign({}, spark[key].levels, level),
-    //   }
-    //
-    //   const updatedSpark = yield Spark.findOneAndUpdate(criteria, updateData, { new: true })
-    //   const pushMessage = {
-    //     event: 'update spark',
-    //     data: { _id: id },
-    //   }
-    //   const { NotificationService } = proton.app.services
-    //   NotificationService.sendPush(sparkMate.user, pushMessage)
-    //   return Promise.resolve(updatedSpark)
-    // }
-
 }

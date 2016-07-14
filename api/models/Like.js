@@ -17,21 +17,27 @@ export default class Like extends Model {
   }
 
   * afterCreate(record, next) {
-    const criteria = {
-      from: record.to,
-      to: record.from,
-      value: 'like',
-    }
-    const likeToMe = yield this.model.findOne(criteria)
-    if (likeToMe) {
-      const mates = [{ user: likeToMe.from }, { user: record.from }]
-      yield Spark.create({ mates })
+    const { from, to, value } = record
+    proton.log.info(`A new like has been created
+        form ${from} user,
+        to ${to} user,
+        and value ${value}`)
+    if (value === 'like') {
+      const likeToMeCriteria = {
+        from: to,
+        to: from,
+        value: 'like',
+      }
+      const likeToMe = yield this.model.findOne(likeToMeCriteria)
+      if (likeToMe) {
+        const mates = [{ user: likeToMe.from }, { user: record.from }]
+        yield Spark.create({ mates })
+      }
     }
     next()
   }
 
   static * create(values) {
-    proton.log.debug('new like', values)
     const like = new this(values)
     return like.save()
   }

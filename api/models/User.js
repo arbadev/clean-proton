@@ -123,7 +123,8 @@ export default class User extends Model {
       yield this._getExcludedUsersCriteria(query),
       yield this._getOrderCriteria(query),
       yield this._getGenderCriteria(query),
-      yield this._getAgeCriteria(query)
+      yield this._getAgeCriteria(query),
+      { status: 'on', avatar: { $ne: null }, message: { $ne: null } }
     )
   }
 
@@ -135,26 +136,30 @@ export default class User extends Model {
     const userId = Model.parseObjectId(user._id)
 
     // Users excluded by dislike
-    const dislikeCriteria = {
-      value: 'dislike',
-      $or: [{ from: userId }, { to: userId }],
+    const likeCriteria = {
+      $or: [
+        { value: 'like', from: userId },
+        {
+          value: 'dislike',
+          $or: [{ from: userId }, { to: userId }],
+        },
+      ],
     }
-    const dislikes = yield Like.find(dislikeCriteria)
-    const dislikeIds = dislikes.map(({ from, to }) => {
+    const likes = yield Like.find(likeCriteria)
+    const likeIds = likes.map(like => {
+      const { from, to } = like
       return to === userId ? from : to
     })
 
     // Users excluded by existing spark
-    const sparkCriteria = {
-      'mates.user': userId,
-    }
+    const sparkCriteria = { 'mates.user': userId }
     const sparks = yield Spark.find(sparkCriteria)
     const sparkIds = sparks.map(spark => {
       const [from, to] = spark.mates
       return to.user === userId ? from.user : to.user
     })
-
-    return { _id: { $ne: [userId].concat(sparkIds, dislikeIds) } }
+    const idsExcluded = [userId].concat(likeIds, sparkIds)
+    return { _id: { $nin: idsExcluded } }
   }
 
   /**
@@ -170,14 +175,14 @@ export default class User extends Model {
    *
    */
   static _getGenderCriteria({ gender }) {
-    return gender ? { gender } : {}
+    return gender && ['female', 'male'].includes(gender) ? { gender } : {}
   }
 
   /**
    *
    *
    */
-  static _getAgeCriteria({ age }) {
+  static _getAgeCriteria({ minAge, maxAge }) {
     return {}
   }
 }

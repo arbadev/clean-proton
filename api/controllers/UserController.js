@@ -65,22 +65,6 @@ export default class UserController extends Controller {
     }
   }
 
-  /**
-   *
-   */
-  * uploadAvatar() {
-    const userId = this.request.user._id
-    const { StorageService } = proton.app.services
-    try {
-      const [avatar] = yield StorageService.upload(this.req.files.avatar)
-      const user = yield User.updateOne(userId, { avatar })
-      this.response.body = user
-    } catch (err) {
-      proton.log.error('UserController.uploadAvatar', err)
-      this.response.status = 400
-    }
-  }
-
    /**
     *
     */
@@ -151,7 +135,15 @@ export default class UserController extends Controller {
         _id: sparkdId,
         'mates.user': user._id,
       }
-      const spark = yield Spark.findOne(criteria).populate('mates.user')
+      const spark = yield Spark.findOne(criteria)
+        .populate('mates.user')
+
+      // TODO: Make this with deep populate
+      spark.mates[0].user.languages = yield Language.find(
+        { _id: { $in: spark.mates[0].user.languages } })
+      spark.mates[1].user.languages = yield Language.find(
+          { _id: { $in: spark.mates[1].user.languages } })
+
       this.response.body = spark
     } catch (err) {
       proton.log.error('UserController.findSparkd', err)

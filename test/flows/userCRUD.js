@@ -12,7 +12,6 @@ const user = {
   lastName: 'Marcano',
   email: 'cj@nucleos.io',
   avatar: 'avatar.png',
-  message: 'message.png',
   facebookId: '10208334708303023',
 }
 
@@ -42,6 +41,13 @@ describe('All flow for create a user', () => {
       .send({ languages })
       .expect(200)
     printResponse('PUT /users/me (update languages)')
+
+    response = yield request
+       .put('/users/me/message')
+       .attach('message', 'test/fixtures/avatar-tony.png')
+       .set('Authorization', `Bearer ${token}`)
+       .expect(200)
+    printResponse('PUT /users/me/message')
 
     response = yield request
       .get('/users')
