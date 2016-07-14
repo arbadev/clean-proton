@@ -24,6 +24,8 @@ types:
   Sparkd: !include types/sparkd.raml
   Like: !include types/like.raml
   Language: !include types/language.raml
+  CloudinarySignature: !include types/cloudinary-signature.raml
+  Bucket: !include types/bucket.raml
 
 securedBy: [bearer]
 
@@ -101,9 +103,17 @@ securedBy: [bearer]
         body: Language[]
 
 /cloudinary-signatures:
-  is[sendError]
+  is: [sendError]
   securedBy: null
   post:
     response:
       201:
-        body: Signature
+        body: CloudinarySignature
+
+/s3-signed-uris:
+  is: [sendError]
+  securedBy: null
+  post:
+    response:
+      201:
+        body: Bucket
