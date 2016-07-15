@@ -151,14 +151,7 @@ export default class User extends Model {
       return to === userId ? from : to
     })
 
-    // Users excluded by existing spark
-    const sparkCriteria = { 'mates.user': userId }
-    const sparks = yield Spark.find(sparkCriteria)
-    const sparkIds = sparks.map(spark => {
-      const [from, to] = spark.mates
-      return to.user === userId ? from.user : to.user
-    })
-    const idsExcluded = [userId].concat(likeIds, sparkIds)
+    const idsExcluded = [userId].concat(likeIds)
     return { _id: { $nin: idsExcluded } }
   }
 
