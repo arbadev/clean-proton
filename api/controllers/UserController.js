@@ -64,38 +64,6 @@ export default class UserController extends Controller {
   }
 
   /**
-   *
-   */
-  * uploadAvatar() {
-    const userId = this.request.user._id
-    const { StorageService } = proton.app.services
-    try {
-      const [avatar] = yield StorageService.upload(this.req.files.avatar)
-      const user = yield User.updateOne(userId, { avatar })
-      this.response.body = user
-    } catch (err) {
-      proton.log.error('UserController.uploadAvatar', err)
-      this.response.status = 400
-    }
-  }
-
-   /**
-    *
-    */
-  * uploadMessage() {
-    const userId = this.request.user._id
-    const { StorageService } = proton.app.services
-    try {
-      const [message] = yield StorageService.upload(this.req.files.message)
-      const user = yield User.updateOne(userId, { message })
-      this.response.body = user
-    } catch (err) {
-      proton.log.error('UserController.uploadMessage', err)
-      this.response.status = 400
-    }
-  }
-
-  /**
    * @description
    * @author Carlos Marcano
    */
@@ -159,15 +127,16 @@ export default class UserController extends Controller {
     }
   }
 
-  /**
-   * @description
-   * @author Carlos Marcano
-   */
-  * updateSparkd() {
+  * like() {
+    const [from, to] = [this.request.user._id, this.params.id]
     try {
-      this.response.body = {}
+      const like = yield Like.create({ to, from, value: 'like' })
+      console.log(like)
+      this.response.status = 201
+      this.response.body = like
     } catch (err) {
-      proton.log.error('UserController.updateSparkd', err)
+      const message = `An error ocurred creating a like for the user ${to}`
+      proton.log.error(message, err)
       this.response.status = 400
     }
   }

@@ -41,6 +41,7 @@
   },
   "devDependencies": {
     "babel-eslint": "^6.0.4",
+    "supertest": "^2.0.0",
     "co-supertest": "^0.0.10",
     "eslint": "^2.9.0",
     "eslint-config-airbnb-base": "^2.0.0",

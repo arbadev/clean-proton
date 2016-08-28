@@ -7,7 +7,7 @@ const request = supertest(app)
 const facebookToken = 'EAAIjRkSocuoBAFOIknNBV9aZC9Y5QZAVjoDwFOlFdbHB6iZBKgdS2L4AZCp0Nj2CQYougj3XF1NVJKXZAmNtzrFdvZAiFZC75UfK9l0fbj3IA7hFo2ME3rr3ZBPuJEX4oxsmCznQRO7TG4VrVEGgwfgMT38SP9Rl1px0hO2KAuNCXKJZCP24HKrSaZAyZCfOkBuZAxFQvRf05873YQIwOMqEj4UW'
 
 describe.skip('AuthController', () => {
-  it('authenticate', function*() {
+  it.skip('authenticate', function*() {
     yield request
       .post('/auth')
       .send({ access_token: facebookToken })
