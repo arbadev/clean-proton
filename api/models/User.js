@@ -2,8 +2,6 @@
 
 import Model from 'proton-mongoose-model'
 
-const { ObjectId } = Model.types
-
 export default class User extends Model {
 
   schema() {
@@ -12,7 +10,12 @@ export default class User extends Model {
       lastName: String,
       avatar: String,
       message: String,
-      age: Number,
+      ageRange: {
+        type: {
+          min: String,
+          max: String,
+        },
+      },
       status: {
         type: String,
         enum: ['on', 'off'],
@@ -20,7 +23,7 @@ export default class User extends Model {
       },
       gender: {
         type: String,
-        enum: ['woman', 'man'],
+        enum: ['male', 'female', 'other'],
       },
       email: {
         type: String,
@@ -34,9 +37,10 @@ export default class User extends Model {
         type: [Number],
         index: '2d',
       },
-      languages: {
-        type: [ObjectId],
-      },
+      languages: [{
+        type: Model.types.ObjectId,
+        ref: 'Language',
+      }],
       preferences: {
         type: Model.types.Mixed,
       },
@@ -48,9 +52,8 @@ export default class User extends Model {
    *
    */
   static me(id) {
-    const { Util } = proton.app.services
-    const _id = Util.getObjectId(id)
-    return this.findOne({ _id })
+    const _id = Model.parseObjectId(id)
+    return this.findOne({ _id }).populate('languages')
   }
 
   /**
@@ -58,8 +61,7 @@ export default class User extends Model {
    * @description find a user for any of its unique identifiers
    */
   static findOneById(id) {
-    const { Util } = proton.app.services
-    const _id = Util.getObjectId(id)
+    const _id = Model.parseObjectId(id)
     const criteria = {
       $or: [
         { _id },
@@ -67,17 +69,16 @@ export default class User extends Model {
         { facebookId: id },
       ],
     }
-    return this.findOne(criteria)
+    return this.findOne(criteria).populate('languages')
   }
 
   /**
    *
    *
    */
-  static updateOne(id, opts) {
-    const { Util } = proton.app.services
-    const _id = Util.getObjectId(id)
-    return this.findOneAndUpdate({ _id }, opts, { new: true })
+  static updateOne(id, values) {
+    const _id = Model.parseObjectId(id)
+    return this.findOneAndUpdate({ _id }, values, { new: true }).populate('languages')
   }
 
   /**
@@ -85,8 +86,7 @@ export default class User extends Model {
    *
    */
   static destroy(id) {
-    const { Util } = proton.app.services
-    const _id = Util.getObjectId(id)
+    const _id = Model.parseObjectId(id)
     const criteria = {
       $or: [
         { _id },
@@ -102,19 +102,80 @@ export default class User extends Model {
   *
   */
   static * findByQueryParams(query) {
-    const { sparkiesOf, sparkStatus, addNervay } = query
-    if (sparkiesOf) {
-      const id = ObjectId.isValid(sparkiesOf) ? new ObjectId(sparkiesOf) : null
-      const criteria = {
-        status: sparkStatus,
-        $or: [
-          { from: { user: id } },
-          { to: { user: id } },
-        ],
-      }
-      const sparkies = yield Spark.find(criteria)
-    }
-    return this.findOneAndRemove()
+    const criteria = yield this._buildCriteriaByQueryParams(query)
+    proton.log.debug('Criteria to find users', criteria)
+    return this.find(criteria).populate('languages')
   }
 
+  // ---------------------------------------------------------------------------
+  // ---------------------------------------------------------------------------
+  // Private methods
+  // ---------------------------------------------------------------------------
+  // ---------------------------------------------------------------------------
+
+  /**
+   *
+   *
+   */
+  static * _buildCriteriaByQueryParams(query) {
+    return Object.assign(
+      {},
+      yield this._getExcludedUsersCriteria(query),
+      yield this._getOrderCriteria(query),
+      yield this._getGenderCriteria(query),
+      yield this._getAgeCriteria(query),
+      { status: 'on', avatar: { $ne: null }, message: { $ne: null } }
+    )
+  }
+
+  /**
+   *
+   *
+   */
+  static * _getExcludedUsersCriteria({ user }) {
+    const userId = Model.parseObjectId(user._id)
+
+    // Users excluded by dislike
+    const likeCriteria = {
+      $or: [
+        { value: 'like', from: userId },
+        {
+          value: 'dislike',
+          $or: [{ from: userId }, { to: userId }],
+        },
+      ],
+    }
+    const likes = yield Like.find(likeCriteria)
+    const likeIds = likes.map(like => {
+      const { from, to } = like
+      return to === userId ? from : to
+    })
+
+    const idsExcluded = [userId].concat(likeIds)
+    return { _id: { $nin: idsExcluded } }
+  }
+
+  /**
+   *
+   *
+   */
+  static _getOrderCriteria(query) {
+    return {}
+  }
+
+  /**
+   *
+   *
+   */
+  static _getGenderCriteria({ gender }) {
+    return gender && ['female', 'male'].includes(gender) ? { gender } : {}
+  }
+
+  /**
+   *
+   *
+   */
+  static _getAgeCriteria({ minAge, maxAge }) {
+    return {}
+  }
 }

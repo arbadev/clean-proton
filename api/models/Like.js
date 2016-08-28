@@ -62,6 +62,7 @@ export default class Like extends Model {
     }
 
     next()
+
   }
 
 }

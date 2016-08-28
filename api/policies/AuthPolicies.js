@@ -28,7 +28,7 @@ export default class AuthPolicies extends Policy {
     const opts = { session: false }
     const cb = function * (err, user, scope) {
       if (err || !user) {
-        console.log('Hola', err, user)
+        proton.log.error('Error on bearer strategy', err, user)
         self.response.status = 401
         return self
       }
@@ -60,4 +60,5 @@ export default class AuthPolicies extends Policy {
       proton.log.error(err)
     }
   }
+  
 }

@@ -7,9 +7,18 @@ import app from '../../server.js'
 const request = supertest(app)
 
 describe.skip('StorageController', () => {
-  it('create signature object', function*() {
+
+  it('create cloudinary signature object', function*() {
     const response = yield request
       .post('/cloudinary-signatures')
       .expect(201)
+    proton.log.debug('signature', response.body)
+  })
+
+  it('create bucket object', function*() {
+    const response = yield request
+      .post('/s3-signed-uris')
+      .expect(201)
+    proton.log.debug('Bucket object', response.body)
   })
 })
