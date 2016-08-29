@@ -60,4 +60,5 @@ export default class AuthPolicies extends Policy {
       proton.log.error(err)
     }
   }
+  
 }

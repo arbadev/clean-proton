@@ -2,44 +2,63 @@
 
 import Model from 'proton-mongoose-model'
 
+const populations = 'from to'
+
 export default class Like extends Model {
 
   schema() {
     return {
-      from: { type: Model.types.ObjectId, required: true, ref: 'User' },
-      to: { type: Model.types.ObjectId, required: true, ref: 'User' },
+      from: {
+        type: Model.types.ObjectId,
+        ref: 'User',
+      },
+      to: {
+        type: Model.types.ObjectId,
+        ref: 'User',
+      },
       value: {
         type: String,
         enum: ['like', 'dislike'],
         required: true,
       },
+      level: Number,
     }
   }
 
-  * afterCreate(record, next) {
-    const { from, to, value } = record
-    proton.log.info(`A new like has been created
-        form ${from} user,
-        to ${to} user,
-        and value ${value}`)
-    if (value === 'like') {
-      const likeToMeCriteria = {
-        from: to,
-        to: from,
-        value: 'like',
-      }
-      const likeToMe = yield this.model.findOne(likeToMeCriteria)
-      if (likeToMe) {
-        const mates = [{ user: likeToMe.from }, { user: record.from }]
-        yield Spark.create({ mates })
-      }
-    }
+  counterpart() {
+    const { value, level } = this
+    const criteria = { value, level, from: this.to, to: this.from }
+    return this.model('Like').findOne(criteria)
+  }
+
+  isPositive() {
+    return this.value === 'like'
+  }
+
+  * beforeCreate(record, next) {
+    const criteria = { 'users._id': { $all: [record.from, record.to] } }
+    const spark = yield Spark.findOne(criteria)
+    record.level = spark ? spark.level : 0
     next()
   }
 
-  static * create(values) {
-    const like = new this(values)
-    return like.save()
+  * afterCreate(record, next) {
+    // Get the counterpart of the like
+    const counterpart = yield record.counterpart()
+    if (record.isPositive() && counterpart) {
+      if (record.level === 0) {
+        const criteria = { _id: record._id }
+        // For the spark creation we need the from an the to values populated :D
+        const like = yield this.model.findOne(criteria).populate(populations)
+        const users = [like.from, like.to]
+        yield Spark.create({ users })
+      }
+      if (record.level > 0) {
+        const criteria = { 'users._id': { $all: [record.from, record.to] } }
+        yield Spark.update(criteria, { $inc: { level: 1 } })
+      }
+    }
+    next()
   }
 
 }

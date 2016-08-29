@@ -15,7 +15,7 @@ const user = {
   facebookId: '10208334708303023',
 }
 
-describe('All flow for create a user', () => {
+describe.skip('All flow for create a user', () => {
   it('createUser', function*() {
     let response = {}
     const printResponse = tag => proton.log.debug(tag, response.body)
