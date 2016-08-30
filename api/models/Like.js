@@ -43,14 +43,13 @@ export default class Like extends Model {
     next()
   }
 
-  * afterCreate(record, next) {
-    const criteria = { _id: record._id}
-    // For the spark creation we need the from an the to values populated :D
-    const like = yield this.model.findOne(criteria).populate(populations)
+  * afterCreate(like, next) {
     // Get the counterpart of the like
     const counterpart = yield like.counterpart()
-
     if (like.isPositive() && counterpart) {
+      const criteria = { _id: record._id}
+      // For the spark creation we need the from an the to values populated :D
+      like = yield this.model.findOne(criteria).populate(populations)
       if (like.level == 0) {
         const users = [like.from, like.to]
         yield Spark.create({ users })
@@ -60,9 +59,7 @@ export default class Like extends Model {
         const spark = yield Spark.update(criteria, { '$inc': { level: 1} })
       }
     }
-
     next()
-
   }
 
 }
