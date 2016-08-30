@@ -7,6 +7,7 @@ export default class Report extends Model {
   schema() {
     return {
       reason: String,
+      description: String,
       from: {
         type: Model.types.ObjectId,
         ref: 'User',
