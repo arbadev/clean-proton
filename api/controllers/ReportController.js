@@ -9,7 +9,8 @@ export default class ReportController extends Controller {
       const from = this.request.user._id
       const to = this.params.userId
       const { reason } = this.request.body
-      yield Report.create({ from, to, reason })
+      const { description } = this.request.body
+      yield Report.create({ from, to, reason, description })
       this.response.status = 204
     } catch (err) {
       proton.log.error('ReportController.create', err)

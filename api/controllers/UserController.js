@@ -139,7 +139,6 @@ export default class UserController extends Controller {
     const [from, to] = [this.request.user._id, this.params.id]
     try {
       const like = yield Like.create({ to, from, value: 'like' })
-      console.log(like)
       this.response.status = 201
       this.response.body = like
     } catch (err) {
@@ -148,5 +147,19 @@ export default class UserController extends Controller {
       this.response.status = 400
     }
   }
+
+  * dislike() {
+    const [from, to] = [this.request.user._id, this.params.id]
+    try {
+      const like = yield Like.create({ to, from, value: 'dislike' })
+      this.response.status = 201
+      this.response.body = like
+    } catch (err) {
+      const message = `An error ocurred creating a like for the user ${to}`
+      proton.log.error(message, err)
+      this.response.status = 400
+    }
+  }
+
 
 }
