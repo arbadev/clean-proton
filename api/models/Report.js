@@ -9,7 +9,6 @@ export default class Report extends Model {
       reason: {
         type: String,
         enum: ['Aggression', 'Verbal abuse', 'Sexual harassment'],
-        required: true,
       },
       description: String,
       from: {

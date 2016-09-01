@@ -18,6 +18,6 @@ router.get('/me/sparkds', AuthPolicies.bearer, UserController.findSparkds)
 router.post('/:id/like', AuthPolicies.bearer, UserController.like)
 
 /*   users reports  */
-router.post('/:userId/reports', AuthPolicies.bearer, ReportController.create)
+router.post('/:userId/report', AuthPolicies.bearer, ReportController.create)
 
 module.exports = router
