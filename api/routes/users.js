@@ -7,6 +7,9 @@ const { UserController, ReportController } = proton.app.controllers
 
 router.get('/', AuthPolicies.bearer, UserController.find)
 router.post('/', AuthPolicies.bearerWithoutUser, UserController.create)
+
+router.put('/me', AuthPolicies.bearer, UserController.updateMe)
+
 router.get('/me', AuthPolicies.bearer, UserController.findMe)
 router.patch('/me', AuthPolicies.bearer, UserController.updateMe)
 router.get('/:userId', AuthPolicies.bearerWithoutUser, UserController.findOne)
