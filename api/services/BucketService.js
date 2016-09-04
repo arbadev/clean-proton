@@ -20,6 +20,7 @@ export default class BucketService extends Service {
       ACL: 'public-read'
     }
     const data = s3.getSignedUrl('putObject', params)
+    console.log(data, bucket, name)
     const signedUri = data
     const uri = `https://${bucket}.s3.amazonaws.com/${name}`
     return {signedUri, uri}

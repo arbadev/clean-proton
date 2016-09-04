@@ -6,7 +6,7 @@ import app from '../../server.js'
 // Declarative section
 const request = supertest(app)
 
-describe.skip('StorageController', () => {
+describe('StorageController', () => {
 
   it('create cloudinary signature object', function*() {
     const response = yield request
