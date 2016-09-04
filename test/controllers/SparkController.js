@@ -4,9 +4,9 @@ import { expect } from 'chai'
 
 const request = supertest(app)
 
-describe('UserController', () => {
+describe('SparkController', () => {
 
-  let [barbara, luis] = ['', '']
+  let [barbara, luis, spark] = ['', '', '']
 
   const users = [
     {
@@ -23,6 +23,7 @@ describe('UserController', () => {
 
   before(function*() {
     [barbara, luis] = yield User.create(users)
+    spark = yield Spark.create({ users: [barbara, luis] })
     barbara.token = yield Token.generate(barbara._id)
     luis.token = yield Token.generate(luis._id)
   })
@@ -31,26 +32,15 @@ describe('UserController', () => {
     yield [User.remove({}), Token.remove({})]
   })
 
-  it('Barbara likes Luis', function*(){
-    yield request
-      .post(`/users/${luis._id}/like`)
-      .set('Authorization', `Bearer ${barbara.token.value}`)
-      .expect(201)
-  })
-
-  it('Luis not like Barbara', function*() {
-    yield request
-      .post(`/users/${barbara._id}/dislike`)
-      .set('Authorization', `Bearer ${luis.token.value}`)
-      .expect(201)
-  })
-
-  it('Update a user profile', function*() {
+  it('Add message to a spark', function*(){
+    const message = 'hola'
     const { body } = yield request
-      .put(`/users/me/`)
-      .set('Authorization', `Bearer ${luis.token.value}`)
-      .send({firstName: 'Mechas'})
-      .expect(200)
+      .post(`/sparkds/${spark._id}/messages`)
+      .set('Authorization', `Bearer ${barbara.token.value}`)
+      .send({ message })
+      .expect(201)
+    const user = body.users.find(element => element._id = barbara._id)
+    expect(user).to.have.property('message', message)
   })
 
 })
