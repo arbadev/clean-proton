@@ -7,130 +7,151 @@ This section groups the auth resources
 
 ## Authentication [/auth]
 
-### Authenticate an user [POST]
+### Authenticate [POST]
 
 + Request (application/json)
-
-        + Body  {
-            "access_token": "EAAIjRkSocuoBAFOIknNBV9aZC9Y5QZAVjoDwFOlFdbHB6iZBKgdS2L4AZCp0Nj2CQYoug"
-        }
+    + Attributes (Auth Request)
 
 + Response 200 (application/json)
-
-    + Attributes (Auth)
-
+    + Attributes (Auth Response)
 
 # Group User
 This section groups the user resources
 
-
 ## User collection [/users]
 
-### Create an user [POST]
-
+### Create [POST]
 + Request (application/json)
-
     + Headers
-        Authorization: Bearer 1af2a706fb133bf7f8f928671f844b65
+
+            Authorization: Bearer 1af2a706fb133bf7f8f928671f844b65
 
 + Response 201 (application/json)
-
     + Attributes (User)
 
-### Retrieve users [GET]
+### Retrieve [GET]
++ Parameters
+    + minAge: 20 (number, required)
+    + maxAge: 30 (number, required)
+    + lat: `25.7625063` (number, optional) Latitude of user. If lng is present this parameter is required
+    + lng: `-80.1947745` (number, optional) Longitude of user. If lat is present this parameter is required
+    + gender: male (enum, optional)
+        + Members
+            + male
+            + female
+            + other
+    + limit: 10 (number, optional)
+        + Default: 10
 
 + Request (application/json)
-
     + Headers
-        Authorization: Bearer 1af2a706fb133bf7f8f928671f844b65
+
+            Authorization: Bearer 1af2a706fb133bf7f8f928671f844b65
 
 + Response 200 (application/json)
-
     + Attributes (array[User Collection])
 
 ## Me [/users/me]
 
 ### Retrieve [GET]
-
 + Request (application/json)
-
     + Headers
-        Authorization: Bearer 1af2a706fb133bf7f8f928671f844b65
+
+            Authorization: Bearer 1af2a706fb133bf7f8f928671f844b65
 
 + Response 200 (application/json)
-
     + Attributes (User)
 
 ### Update [PUT]
-
 + Request (application/json)
-
     + Headers
-        Authorization: Bearer 1af2a706fb133bf7f8f928671f844b65
+
+            Authorization: Bearer 1af2a706fb133bf7f8f928671f844b65
 
     + Body
-        {
-          "firstName": "Pablo"
-        }
+
+            {
+              "firstName": "Pablo"
+            }
 
 + Response 200 (application/json)
-
     + Attributes (User)
 
 ## My sparkds [/users/me/sparkds]
 
-### Retrieve my sparkds [GET]
+### Retrieve [GET]
++ Parameters
+    + level: two (enum, optional)
+        + Members
+            + one
+            + two
+            + three
+    + status: sparking (enum, optional)
+        + Members:
+            + sparking
+            + sparked
+            + sparkout
+    + greaterThan: 507f1f77bcf86cd799439011 (string, optional)
+    + limit: 10 (number, optional)
+        + Default: 10
+
 
 + Request (application/json)
-
     + Headers
-        Authorization: Bearer 1af2a706fb133bf7f8f928671f844b65
+
+            Authorization: Bearer 1af2a706fb133bf7f8f928671f844b65
 
 + Response 200 (application/json)
-
     + Attributes (array[Sparkd])
 
+## My sparkd [/users/me/sparkds/{id}]
+
+### Retrieve [GET]
++ Request (application/json)
+    + Headers
+
+            Authorization: Bearer 1af2a706fb133bf7f8f928671f844b65
+
++ Response 200 (application/json)
+    + Attributes (Sparkd)
 
 ## Like [/users/{id}/like]
 
-### Create a like [POST]
-
+### Create [POST]
 + Request (application/json)
-
     + Headers
-        Authorization: Bearer 1af2a706fb133bf7f8f928671f844b65
 
-    + Body {}
+            Authorization: Bearer 1af2a706fb133bf7f8f928671f844b65
 
-+ Response 200 (application/json)
-
++ Response 201 (application/json)
     + Attributes (Like)
 
 ## Dislike [/users/{id}/dislike]
 
-### Create a dislike [POST]
-
+### Create [POST]
 + Request (application/json)
-
     + Headers
-        Authorization: Bearer 1af2a706fb133bf7f8f928671f844b65
 
-    + Body {}
+            Authorization: Bearer 1af2a706fb133bf7f8f928671f844b65
 
-+ Response 200 (application/json)
-
++ Response 201 (application/json)
     + Attributes (Like)
 
 ## Report [/users/{id}/report]
 
-### Create a report [POST]
+### Create [POST]
 
 + Request (application/json)
-
     + Headers
-        Authorization: Bearer 1af2a706fb133bf7f8f928671f844b65
 
-    + Body {}
+            Authorization: Bearer 1af2a706fb133bf7f8f928671f844b65
+
+    + Body
+
+            {
+              "reason": "Verbal abuse",
+              "description": "Very obscene words"
+            }
 
 + Response 200 (application/json)
 
@@ -161,13 +182,14 @@ This section groups the user resources
 + Response 201 (application/json)
 
     + Body
-        {
-          "id":"",
-          "time": "",
-          "signature": "",
-          "uri": "",
-          "apiKey": ""
-        }
+
+            {
+              "id":"",
+              "time": "",
+              "signature": "",
+              "uri": "",
+              "apiKey": ""
+            }
 
 ## Aws S3 signature [/s3-signed-uris]
 
@@ -178,21 +200,23 @@ This section groups the user resources
 + Response 201 (application/json)
 
     + Body
-        {
-          "signedUri":"",
-          "uri": ""
-        }
+
+            {
+              "signedUri":"",
+              "uri": ""
+            }
 
 
 # Data Structures
 
-### Auth
+### Auth Request
++ `access_token`: EAAIjRkSocuoBAFOIknNBV9aZC9Y5QZAVjoDwFOlFdbHB6iZBKgdS2L4AZCp0Nj2CQYoug (string) - The facebook access token of user
 
-+ user: (User) - This field is available only if the user associated to the facebook token is registered
+### Auth Response
++ user (User) - This field is available only if the user associated to the facebook token is registered
 + token: 1af2a706fb133bf7f8f928671f844b65 (string) - the access token, this token is used for authenticate every request that need the Bearer auth
 
 ### User Collection
-
 + _id: 507f1f77bcf86cd799439011
 + firstName: Pablo (string, required) - The user first name
 + lastName: Guzman (string, required) - The user last name
@@ -201,24 +225,25 @@ This section groups the user resources
 + status: on (string) - The user status
 + birthdate: `10/12/1991` (string, required) - the birthdate of the user
 
-### User
-
-+ Include (User Collection)
-+ languages: (array[Language], required)
-+ preferences: (object) - a free object structure for the diferent preferences of the user
+### User (User Collection)
++ languages (array[Language], required)
++ preferences (object) - a free object structure for the diferent preferences of the user
 + gender: male (string)
 + coordinates: `25.7625063`, `-80.1947745` (array)
 + facebookId: 10153476574898450 (string) - the facebookId of the user
 
+### Sparkd
++ _id: 578844943a090f1000adb309
++ status: sparking, sparked, sparkout (enum)
++ level: one, two, three (enum) - the code of sparkd
++ user (User Collection)
 
 ### Language
-
 + _id: 574e56eae630e21100867221
 + name: Abkhaz (string) - the name of the language
 + code: ab (string) - the code of the language
 
 ### Like
-
 + _id: 578844943a090f1000adb309
 + from: 57882abd54e8891000b1273b (string) - who made the like or dislike
 + to: 57883e0754e8891000b12744 (string) - for whom is the like or dislike
@@ -226,34 +251,8 @@ This section groups the user resources
 + level: 0, 1, 2 (enum)
 
 ### Report
-
 + _id: 578844943a090f1000adb309
 + from: 57882abd54e8891000b1273b (string) - who made the report
 + to: 57883e0754e8891000b12744 (string) - for whom it's the report
 + reason: Aggression, Verbal abuse, Sexual harassment (enum)
 + description: Very obscene words (string)
-
-
-### Sparkd
-
-+ _id: 578844943a090f1000adb309
-+ status: sparking, sparked, sparkout (enum)
-+ level: one, two, three (enum) - the code of sparkd
-+ user: (User Collection)
-
-
-### Levels
-
-+ one: (Level)
-+ two: (Level Two)
-+ three: (Level)
-
-### Level
-
-+ decision: true (boolean)
-+ avatar: `http://res.cloudinary.com/nucleos/image/upload/v1468541626/1f84ab06f0513b197ffd282c0b615669.jpg` (string) - the avatar of the user in this level
-
-### Level Two
-
-+ Include (Level)
-+ message: `https://s3.amazonaws.com/persona.nucleos/ad3a793972a1c6f8243826c1c89fe725.mp3` (string) - only in level two
