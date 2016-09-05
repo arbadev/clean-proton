@@ -103,7 +103,7 @@ describe('UserController', () => {
   })
 
   describe('reports on sparks', () => {
-    const aReason = 'Aggression'
+    const aReason = 'Photo'
     const aDescription = 'a description'
 
     it('Mariangela report Andres', function*() {

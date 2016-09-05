@@ -20,4 +20,10 @@ router.post('/:id/like', AuthPolicies.bearer, UserController.like)
 /*   users reports  */
 router.post('/:userId/report', AuthPolicies.bearer, ReportController.create)
 
+/*   users feedbacks  */
+// router.post('/:userId/feedback', AuthPolicies.bearer, Feedback.create)
+
+/*    test EmailService   */
+router.post('/mail', ReportController.emailTest)
+
 module.exports = router

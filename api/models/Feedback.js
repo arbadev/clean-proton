@@ -2,21 +2,16 @@
 
 import Model from 'proton-mongoose-model'
 
-export default class Report extends Model {
+export default class Feedback extends Model {
 
   schema() {
     return {
       reason: {
         type: String,
-        enum: ['Photo', 'Audio'],
+        enum: ['AAAAA', 'BBBBB'],
       },
       description: String,
       from: {
-        type: Model.types.ObjectId,
-        ref: 'User',
-        required: true,
-      },
-      to: {
         type: Model.types.ObjectId,
         ref: 'User',
         required: true,
