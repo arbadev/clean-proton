@@ -11,11 +11,12 @@ export default class EmailService extends Service {
     super(app)
     this.sg = sg(process.env.SENDGRID_API_KEY)
   }
-  sendReportMail(mSubject, mContent) {
+  sendMail(mSubject, mContent) {
     const fromEmail = new mail.Email('no-reply@sparkd.com')
     const toEmail = new mail.Email('nucleos.test@gmail.com')
     const subject = mSubject
-    const content = new mail.Content('text/plain', mContent.reason + ' ' + mContent.description)
+    const cont = `${mContent.reason} -- ${mContent.description} -- ${mContent.from}`
+    const content = new mail.Content('text/plain', cont)
     const email = new mail.Mail(fromEmail, subject, toEmail, content)
     const request = sg.emptyRequest({
       method: 'POST',
@@ -34,25 +35,4 @@ export default class EmailService extends Service {
       proton.log.error(error.response.statusCode)
     })
   }
-
-  // sendFeedbackMail(tittle, description) {
-  //
-  //   let fromEmail = new helper.Email('no-reply@sparkd.com')
-  //   let toEmail = new helper.Email('nucleos.test@gmail.com')
-  //   let subject = 'Report Mail'
-  //   let content = new helper.Content('text/plain', tittle + ' ' + description)
-  //   let mail = new helper.Mail(fromEmail, subject, toEmail, content)
-  //
-  //   let request = sg.emptyRequest({
-  //     method: 'POST',
-  //     path: '/v3/mail/send',
-  //     body: mail.toJSON(),
-  //   })
-  //
-  //   sg.API(request, function(error, response) {
-  //     console.log(response.statusCode)
-  //     console.log(response.body)
-  //     console.log(response.headers)
-  //   })
-  // }
 }
