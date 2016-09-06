@@ -11,11 +11,11 @@ export default class EmailService extends Service {
     super(app)
     this.sg = sg(process.env.SENDGRID_API_KEY)
   }
-  sendReportMail() {
+  sendReportMail(mSubject, mContent) {
     const fromEmail = new mail.Email('no-reply@sparkd.com')
-    const toEmail = new mail.Email('a3barradas@gmail.com')
-    const subject = 'Report Mail'
-    const content = new mail.Content('text/plain', 'BBBBBBBBBBBBBBBBBBB')
+    const toEmail = new mail.Email('nucleos.test@gmail.com')
+    const subject = mSubject
+    const content = new mail.Content('text/plain', mContent.reason + ' ' + mContent.description)
     const email = new mail.Mail(fromEmail, subject, toEmail, content)
     const request = sg.emptyRequest({
       method: 'POST',
