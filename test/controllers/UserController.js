@@ -120,6 +120,25 @@ describe('UserController', () => {
         .send({ reason: aReason, description: aDescription })
         .expect(201)
     })
+  })
 
+  describe('Sparkd Feedbacks', () => {
+    const aTittle = 'My tittle'
+    const aDescription = 'a description'
+
+    it('Mariangela sends Feedbacks', function*() {
+      yield request
+        .post('/users/feedback')
+        .set('Authorization', `Bearer ${mariangela.token.value}`)
+        .send({ tittle: aTittle, description: aDescription })
+        .expect(201)
+    })
+    it('Andres sends Feedbacks', function*() {
+      yield request
+        .post('/users/feedback')
+        .set('Authorization', `Bearer ${andres.token.value}`)
+        .send({ tittle: aTittle, description: aDescription })
+        .expect(201)
+    })
   })
 })

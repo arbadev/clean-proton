@@ -6,9 +6,8 @@ export default class Feedback extends Model {
 
   schema() {
     return {
-      reason: {
+      tittle: {
         type: String,
-        enum: ['AAAAA', 'BBBBB'],
       },
       description: String,
       from: {

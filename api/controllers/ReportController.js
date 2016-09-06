@@ -24,7 +24,7 @@ export default class ReportController extends Controller {
     try {
       const { EmailService } = proton.app.services
       const description = 'a description'
-      const reason = 'a reason'
+      const reason = 'a tittle'
       EmailService.sendReportMail(reason, description)
       this.response.status = 201
     } catch (err) {

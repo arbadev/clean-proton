@@ -3,7 +3,7 @@ import Router from 'koa-router'
 
 const router = new Router({ prefix: '/users' })
 const { AuthPolicies } = proton.app.policies
-const { UserController, ReportController } = proton.app.controllers
+const { UserController, ReportController, FeedbackController } = proton.app.controllers
 
 router.get('/', AuthPolicies.bearer, UserController.find)
 router.post('/', AuthPolicies.bearerWithoutUser, UserController.create)
@@ -21,7 +21,7 @@ router.post('/:id/like', AuthPolicies.bearer, UserController.like)
 router.post('/:userId/report', AuthPolicies.bearer, ReportController.create)
 
 /*   users feedbacks  */
-// router.post('/:userId/feedback', AuthPolicies.bearer, Feedback.create)
+router.post('/feedback', AuthPolicies.bearer, FeedbackController.create)
 
 /*    test EmailService   */
 router.post('/mail', ReportController.emailTest)
