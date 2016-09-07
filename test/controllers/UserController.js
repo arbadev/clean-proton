@@ -123,21 +123,21 @@ describe('UserController', () => {
   })
 
   describe('Sparkd Feedbacks', () => {
-    const aTittle = 'My tittle'
+    const aTitle = 'My title'
     const aDescription = 'a description'
 
     it('Mariangela sends Feedbacks', function*() {
       yield request
         .post('/users/feedback')
         .set('Authorization', `Bearer ${mariangela.token.value}`)
-        .send({ tittle: aTittle, description: aDescription })
+        .send({ title: aTitle, description: aDescription })
         .expect(201)
     })
     it('Andres sends Feedbacks', function*() {
       yield request
         .post('/users/feedback')
         .set('Authorization', `Bearer ${andres.token.value}`)
-        .send({ tittle: aTittle, description: aDescription })
+        .send({ title: aTitle, description: aDescription })
         .expect(201)
     })
   })

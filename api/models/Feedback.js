@@ -6,7 +6,7 @@ export default class Feedback extends Model {
 
   schema() {
     return {
-      tittle: {
+      title: {
         type: String,
       },
       description: String,
