@@ -2,20 +2,20 @@
 
 import Policy from 'proton-policy'
 
+const opts = { session: false }
+
 export default class AuthPolicies extends Policy {
 
   * facebook(next) {
-    const self = this
-    const opts = { session: false }
-    const cb = function * (err, user) {
+    const cb = function * (err, profile) {
       if (err) {
-        proton.log.debug('error', err)
-        self.response.status = 401
-        return self
+        proton.log.error('Error on facebook strategy', err)
+        this.response.status = 401
+        return this
       }
-      self.request.user = user
-      yield next
-    }
+      this.request.facebookId = profile.id
+      return yield next
+    }.bind(this)
     try {
       yield passport.authenticate('facebook-token', opts, cb).call(this)
     } catch (err) {
@@ -24,18 +24,16 @@ export default class AuthPolicies extends Policy {
   }
 
   * bearer(next) {
-    const self = this
-    const opts = { session: false }
     const cb = function * (err, user, scope) {
       if (err || !user) {
         proton.log.error('Error on bearer strategy', err, user)
-        self.response.status = 401
-        return self
+        this.response.status = 401
+        return this
       }
-      self.request.user = user
-      self.request.scope = scope
-      yield next
-    }
+      this.request.user = user
+      this.request.scope = scope
+      return yield next
+    }.bind(this)
     try {
       yield passport.authenticate('bearer', opts, cb).call(this)
     } catch (err) {
@@ -44,21 +42,20 @@ export default class AuthPolicies extends Policy {
   }
 
   * bearerWithoutUser(next) {
-    const self = this
-    const opts = { session: false }
     const withoutUser = 'error_description="without user"'
     const cb = function * (err, user, info) {
       if (err || info.indexOf(withoutUser) === -1) {
-        self.response.status = 401
-        return self
+        proton.log.error('Error on bearer strategy without user', err, user)
+        this.response.status = 401
+        return this
       }
-      yield next
-    }
+      return yield next
+    }.bind(this)
     try {
       yield passport.authenticate('bearer', opts, cb).call(this)
     } catch (err) {
       proton.log.error(err)
     }
   }
-  
+
 }

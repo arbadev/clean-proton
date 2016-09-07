@@ -51,15 +51,15 @@
   },
   "devDependencies": {
     "babel-eslint": "^6.0.4",
-    "supertest": "^2.0.0",
+    "chai": "^3.5.0",
     "co-supertest": "^0.0.10",
-    "chai": "*",
     "dotenv": "^2.0.0",
     "eslint": "^2.9.0",
     "eslint-config-airbnb-base": "^2.0.0",
     "eslint-plugin-import": "^1.7.0",
     "mocha-better-spec-reporter": "^3.0.1",
     "mocha-co": "^1.17.1-co.1",
-    "mongoose": "^4.4.12"
+    "mongoose": "^4.4.12",
+    "supertest": "^2.0.0"
   }
 }
