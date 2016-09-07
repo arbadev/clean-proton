@@ -6,11 +6,8 @@ const request = supertest(app)
 
 describe('UserController', () => {
 
-<<<<<<< HEAD
 
-=======
   let [barbara, luis, mariangela, andres] = ['', '', '', '']
->>>>>>> features/emailReport
 
   const users = [
     {
@@ -22,9 +19,6 @@ describe('UserController', () => {
       firstName: 'luis',
       email: 'luis@nucleos.io',
       facebookId: 2
-<<<<<<< HEAD
-
-=======
     },
     {
       firstName: 'Mariangela',
@@ -55,119 +49,116 @@ describe('UserController', () => {
 
     it('Barbara likes Luis', function*() {
       yield request
-        .post(`/users/${luis._id}/like`)
-        .set('Authorization', `Bearer ${barbara.token.value}`)
-        .expect(201)
+      .post(`/users/${luis._id}/like`)
+      .set('Authorization', `Bearer ${barbara.token.value}`)
+      .expect(201)
     })
 
     it('Andres likes Mariangela', function*() {
       yield request
-        .post(`/users/${mariangela._id}/like`)
-        .set('Authorization', `Bearer ${andres.token.value}`)
-        .expect(201)
+      .post(`/users/${mariangela._id}/like`)
+      .set('Authorization', `Bearer ${andres.token.value}`)
+      .expect(201)
     })
 
     it('Mariangela likes Andres', function*() {
       yield request
-        .post(`/users/${andres._id}/like`)
-        .set('Authorization', `Bearer ${mariangela.token.value}`)
-        .expect(201)
+      .post(`/users/${andres._id}/like`)
+      .set('Authorization', `Bearer ${mariangela.token.value}`)
+      .expect(201)
     })
 
     it('Luis likes Barbara', function*() {
       yield request
-        .post(`/users/${barbara._id}/like`)
-        .set('Authorization', `Bearer ${luis.token.value}`)
-        .expect(201)
+      .post(`/users/${barbara._id}/like`)
+      .set('Authorization', `Bearer ${luis.token.value}`)
+      .expect(201)
     })
 
     it('Barbara still likes luis', function*() {
       yield request
-        .post(`/users/${luis._id}/like`)
-        .set('Authorization', `Bearer ${barbara.token.value}`)
-        .expect(201)
-    })
->>>>>>> features/emailReport
-
-  after(function*() {
-    yield [User.remove({}), Token.remove({})]
-  })
-
-<<<<<<< HEAD
-  it('Barbara likes Luis', function*(){
-    yield request
       .post(`/users/${luis._id}/like`)
       .set('Authorization', `Bearer ${barbara.token.value}`)
       .expect(201)
-  })
+    })
 
-  it('Luis not like Barbara', function*() {
-    yield request
+    after(function*() {
+      yield [User.remove({}), Token.remove({})]
+    })
+
+    it('Barbara likes Luis', function*(){
+      yield request
+      .post(`/users/${luis._id}/like`)
+      .set('Authorization', `Bearer ${barbara.token.value}`)
+      .expect(201)
+    })
+
+    it('Luis not like Barbara', function*() {
+      yield request
       .post(`/users/${barbara._id}/dislike`)
       .set('Authorization', `Bearer ${luis.token.value}`)
       .expect(201)
-  })
+    })
 
-  it('Update a user profile', function*() {
-    const { body } = yield request
+    it('Update a user profile', function*() {
+      const { body } = yield request
       .put(`/users/me/`)
       .set('Authorization', `Bearer ${luis.token.value}`)
       .send({firstName: 'Mechas'})
       .expect(200)
-=======
-    it('Mariangela still likes Andres', function*() {
-      yield request
+      it('Mariangela still likes Andres', function*() {
+        yield request
         .post(`/users/${andres._id}/like`)
         .set('Authorization', `Bearer ${mariangela.token.value}`)
         .expect(201)
-    })
+      })
 
-    it('Andres still likes Mariangela', function*() {
-      yield request
+      it('Andres still likes Mariangela', function*() {
+        yield request
         .post(`/users/${mariangela._id}/like`)
         .set('Authorization', `Bearer ${andres.token.value}`)
         .expect(201)
+      })
     })
-  })
 
-  describe('reports on sparks', () => {
-    const aReason = 'Photo'
-    const aDescription = 'a description'
+    describe('reports on sparks', () => {
+      const aReason = 'Photo'
+      const aDescription = 'a description'
 
-    it('Mariangela report Andres', function*() {
-      yield request
+      it('Mariangela report Andres', function*() {
+        yield request
         .post(`/users/${andres._id}/report`)
         .set('Authorization', `Bearer ${mariangela.token.value}`)
         .send({ reason: aReason, description: aDescription })
         .expect(201)
-    })
-    it('Andres report Mariangela', function*() {
-      yield request
+      })
+      it('Andres report Mariangela', function*() {
+        yield request
         .post(`/users/${mariangela._id}/report`)
         .set('Authorization', `Bearer ${andres.token.value}`)
         .send({ reason: aReason, description: aDescription })
         .expect(201)
+      })
     })
->>>>>>> features/emailReport
-  })
 
-  describe('Sparkd Feedbacks', () => {
-    const aTitle = 'My title'
-    const aDescription = 'a description'
+    describe('Sparkd Feedbacks', () => {
+      const aTitle = 'My title'
+      const aDescription = 'a description'
 
-    it('Mariangela sends Feedbacks', function*() {
-      yield request
+      it('Mariangela sends Feedbacks', function*() {
+        yield request
         .post('/users/feedback')
         .set('Authorization', `Bearer ${mariangela.token.value}`)
         .send({ title: aTitle, description: aDescription })
         .expect(201)
-    })
-    it('Andres sends Feedbacks', function*() {
-      yield request
+      })
+      it('Andres sends Feedbacks', function*() {
+        yield request
         .post('/users/feedback')
         .set('Authorization', `Bearer ${andres.token.value}`)
         .send({ title: aTitle, description: aDescription })
         .expect(201)
+      })
     })
   })
 })
