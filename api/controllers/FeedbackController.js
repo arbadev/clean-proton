@@ -10,11 +10,7 @@ export default class FeedbackController extends Controller {
       const from = this.request.user._id
       const { title } = this.request.body
       const { description } = this.request.body
-      const content = {
-        reason: this.title,
-        description: this.description,
-        from: this.from,
-      }
+      const content = { title, description, from }
       const { EmailService } = proton.app.services
       const subject = 'FEEDBACK SPARKD'
       EmailService.sendMail(subject, content)

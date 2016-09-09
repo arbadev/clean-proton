@@ -120,45 +120,45 @@ describe('UserController', () => {
         .expect(201)
       })
     })
+  })
 
-    describe('reports on sparks', () => {
-      const aReason = 'Photo'
-      const aDescription = 'a description'
+  describe('reports on sparks', () => {
+    const aReason = 'Photo'
+    const aDescription = 'a description'
 
-      it('Mariangela report Andres', function*() {
-        yield request
-        .post(`/users/${andres._id}/report`)
-        .set('Authorization', `Bearer ${mariangela.token.value}`)
-        .send({ reason: aReason, description: aDescription })
-        .expect(201)
-      })
-      it('Andres report Mariangela', function*() {
-        yield request
-        .post(`/users/${mariangela._id}/report`)
-        .set('Authorization', `Bearer ${andres.token.value}`)
-        .send({ reason: aReason, description: aDescription })
-        .expect(201)
-      })
+    it('Mariangela report Andres', function*() {
+      yield request
+      .post(`/users/${andres._id}/report`)
+      .set('Authorization', `Bearer ${mariangela.token.value}`)
+      .send({ reason: aReason, description: aDescription })
+      .expect(201)
     })
+    it('Andres report Mariangela', function*() {
+      yield request
+      .post(`/users/${mariangela._id}/report`)
+      .set('Authorization', `Bearer ${andres.token.value}`)
+      .send({ reason: aReason, description: aDescription })
+      .expect(201)
+    })
+  })
 
-    describe('Sparkd Feedbacks', () => {
-      const aTitle = 'My title'
-      const aDescription = 'a description'
+  describe('Sparkd Feedbacks', () => {
+    const aTitle = 'My title'
+    const aDescription = 'a description'
 
-      it('Mariangela sends Feedbacks', function*() {
-        yield request
-        .post('/users/feedback')
-        .set('Authorization', `Bearer ${mariangela.token.value}`)
-        .send({ title: aTitle, description: aDescription })
-        .expect(201)
-      })
-      it('Andres sends Feedbacks', function*() {
-        yield request
-        .post('/users/feedback')
-        .set('Authorization', `Bearer ${andres.token.value}`)
-        .send({ title: aTitle, description: aDescription })
-        .expect(201)
-      })
+    it('Mariangela sends Feedbacks', function*() {
+      yield request
+      .post('/users/feedback')
+      .set('Authorization', `Bearer ${mariangela.token.value}`)
+      .send({ title: aTitle, description: aDescription })
+      .expect(201)
+    })
+    it('Andres sends Feedbacks', function*() {
+      yield request
+      .post('/users/feedback')
+      .set('Authorization', `Bearer ${andres.token.value}`)
+      .send({ title: aTitle, description: aDescription })
+      .expect(201)
     })
   })
 })

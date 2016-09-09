@@ -12,12 +12,7 @@ export default class ReportController extends Controller {
       const subject = 'REPORT SPARKD'
       const { reason } = this.request.body
       const { description } = this.request.body
-      const content = {
-        reason: this.reason,
-        description: this.description,
-        from: this.from,
-        to: this.to,
-      }
+      const content = { reason, description, from, to }
       const { EmailService } = proton.app.services
       EmailService.sendMail(subject, content)
       proton.log.debug('After mail')
