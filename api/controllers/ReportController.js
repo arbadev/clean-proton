@@ -6,6 +6,7 @@ export default class ReportController extends Controller {
   // test
   * create() {
     try {
+      proton.log.debug('ReportController.create')
       const from = this.request.user._id
       const to = this.params.userId
       const subject = 'REPORT SPARKD'
@@ -19,7 +20,9 @@ export default class ReportController extends Controller {
       }
       const { EmailService } = proton.app.services
       EmailService.sendMail(subject, content)
+      proton.log.debug('After mail')
       yield Report.create({ from, to, reason, description })
+      proton.log.debug('After Create report')
       this.response.status = 201
     } catch (err) {
       proton.log.error('ReportController.create', err)

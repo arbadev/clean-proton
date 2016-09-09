@@ -3,8 +3,6 @@
 import Service from 'proton-service'
 import sg from 'sendgrid'
 import { mail } from 'sendgrid'
-// let sg = require('sendgrid')(process.env.SENDGRID_API_KEY)
-
 
 export default class EmailService extends Service {
   constructor(app) {
@@ -12,6 +10,7 @@ export default class EmailService extends Service {
     this.sg = sg(process.env.SENDGRID_API_KEY)
   }
   sendMail(mSubject, mContent) {
+    proton.log.debug('EmailService.sendMail content', mContent)
     const fromEmail = new mail.Email('no-reply@sparkd.com')
     const toEmail = new mail.Email('nucleos.test@gmail.com')
     const subject = mSubject
@@ -29,10 +28,10 @@ export default class EmailService extends Service {
   _sendRequest(request) {
     sg.API(request)
     .then(response => {
-      proton.log.error(response.statusCode)
+      proton.log.debug(response.statusCode)
     })
     .catch(error => {
-      proton.log.error(error.response.statusCode)
+      proton.log.debug(error.response.statusCode)
     })
   }
 }

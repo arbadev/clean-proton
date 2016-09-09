@@ -6,6 +6,7 @@ export default class FeedbackController extends Controller {
   // test
   * create() {
     try {
+      proton.log.debug('FeedbackController.create')
       const from = this.request.user._id
       const { title } = this.request.body
       const { description } = this.request.body
@@ -17,7 +18,9 @@ export default class FeedbackController extends Controller {
       const { EmailService } = proton.app.services
       const subject = 'FEEDBACK SPARKD'
       EmailService.sendMail(subject, content)
+      proton.log.debug('After mail')
       yield Feedback.create({ from, title, description })
+      proton.log.debug('After Create Feedback')
       this.response.status = 201
     } catch (err) {
       proton.log.error('FeedbackController.create', err)
