@@ -61,22 +61,32 @@ export default class Sparkd extends Model {
     return spark
   }
 
-  static * findByQueryParams(query) {
-    const { CloudinaryService } = proton.app.services
-    const userId = query.user._id
-    const criteria = {
-      'users._id': userId,
-    }
-    if (!this.schema.options.toJSON) this.schema.options.toJSON = {}
-    this.schema.options.toJSON.transform = (doc, ret) => {
-      const { status, level } = ret
-      const user = ret.users.find(({ _id }) => _id && _id !== userId)
-      if (level === 1) {
-        user.avatar = CloudinaryService.pixelateUrlOfLevel2(user.avatar)
-      }
-      return { user, status, level }
-    }
-    return this.find(criteria)
+  static * findByQueryParams({ user, uri, params }) {
+    const { SearchService } = proton.app.services
+    const criteria = buildCriteria.call(this, user, params)
+    const opts = { criteria, uri, params }
+    const { pagination, collection } = yield SearchService.search(this, opts)
+    const sparkds = collection.map(c => formatSparkd.call(this, user, c))
+    return { pagination, sparkds }
   }
+}
 
+function buildCriteria(user, params) {
+  const { level, status } = params
+  const criteria = {
+    'users._id': Model.parseObjectId(user._id),
+  }
+  if (level) criteria.level = Number(level)
+  if (status) criteria.status = status
+  return criteria
+}
+
+function formatSparkd(user, sparkd) {
+  const { CloudinaryService } = proton.app.services
+  const { _id, status, level } = sparkd
+  const counterPart = sparkd.users.find(({ _id }) => !_id.equals(user._id))
+  if (level === 1) {
+    counterPart.avatar = CloudinaryService.pixelateUrlOfLevel2(user.avatar)
+  }
+  return { _id, status, level, user: counterPart }
 }

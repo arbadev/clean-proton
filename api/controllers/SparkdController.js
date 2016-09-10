@@ -1,17 +1,17 @@
-'use strict'
 
 import Controller from 'proton-controller'
 
 export default class SparkdController extends Controller {
 
-  /**
-   *
-   */
   * find() {
     const { user } = this.request
-    const query = Object.assign({}, this.query, { user })
+    const uri = `${this.request.origin}${this.request.path}`
+    const params = this.query
+    const opts = { user, uri, params }
     try {
-      this.response.body = yield Sparkd.findByQueryParams(query)
+      const { sparkds, pagination } = yield Sparkd.findByQueryParams(opts)
+      this.response.body = sparkds
+      this.set('Link', pagination)
     } catch (err) {
       proton.log.error('SparkdController.find', err)
       this.status = 400

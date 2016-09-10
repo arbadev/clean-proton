@@ -14,13 +14,9 @@ router.get('/me', AuthPolicies.bearer, UserController.findMe)
 router.patch('/me', AuthPolicies.bearer, UserController.updateMe)
 router.delete('/:userId', UserController.destroy)
 
-/*   /users/me/sparkds  */
-// router.get('/me/sparkds', AuthPolicies.bearer, UserController.findSparkds)
-
 router.post('/:id/like', AuthPolicies.bearer, UserController.like)
 
 router.post('/:id/dislike', AuthPolicies.bearer, UserController.dislike)
-
 
 /*   users reports  */
 router.post('/:userId/reports', AuthPolicies.bearer, ReportController.create)

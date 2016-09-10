@@ -77,44 +77,6 @@ This section groups the user resources
 + Response 200 (application/json)
     + Attributes (User)
 
-## My sparkds [/users/me/sparkds]
-
-### Retrieve [GET]
-+ Parameters
-    + level: two (enum, optional)
-        + Members
-            + one
-            + two
-            + three
-    + status: sparking (enum, optional)
-        + Members:
-            + sparking
-            + sparked
-            + sparkout
-    + greaterThan: 507f1f77bcf86cd799439011 (string, optional)
-    + limit: 10 (number, optional)
-        + Default: 10
-
-
-+ Request (application/json)
-    + Headers
-
-            Authorization: Bearer 1af2a706fb133bf7f8f928671f844b65
-
-+ Response 200 (application/json)
-    + Attributes (array[Sparkd])
-
-## My sparkd [/users/me/sparkds/{id}]
-
-### Retrieve [GET]
-+ Request (application/json)
-    + Headers
-
-            Authorization: Bearer 1af2a706fb133bf7f8f928671f844b65
-
-+ Response 200 (application/json)
-    + Attributes (Sparkd)
-
 ## Like [/users/{id}/like]
 
 ### Create [POST]
@@ -158,6 +120,44 @@ This section groups the user resources
     + Attributes (Report)
 
 # Group Sparkds
+
+## My sparkds [/sparkds]
+
+### Retrieve [GET]
++ Parameters
+    + level: two (enum, optional)
+        + Members
+            + one
+            + two
+            + three
+    + status: sparking (enum, optional)
+        + Members
+            + sparking
+            + sparked
+            + sparkout
+    + greaterThan: 507f1f77bcf86cd799439011 (string, optional)
+    + limit: 10 (number, optional)
+        + Default: 10
+
+
++ Request (application/json)
+    + Headers
+
+            Authorization: Bearer 1af2a706fb133bf7f8f928671f844b65
+
++ Response 200 (application/json)
+    + Attributes (array[Sparkd])
+
+## My sparkd [/sparkds/{id}]
+
+### Retrieve [GET]
++ Request (application/json)
+    + Headers
+
+            Authorization: Bearer 1af2a706fb133bf7f8f928671f844b65
+
++ Response 200 (application/json)
+    + Attributes (Sparkd)
 
 ## Add message  [/sparkds/{id}/messages]
 
@@ -236,7 +236,10 @@ This section groups the user resources
 ### Sparkd
 + _id: 578844943a090f1000adb309
 + status: sparking, sparked, sparkout (enum)
-+ level: one, two, three (enum) - the code of sparkd
++ level (enum) - the code of sparkd
+    + 1 (number)
+    + 2 (number)
+    + 3 (number)
 + user (User Collection)
 
 ### Language
@@ -249,7 +252,10 @@ This section groups the user resources
 + from: 57882abd54e8891000b1273b (string) - who made the like or dislike
 + to: 57883e0754e8891000b12744 (string) - for whom is the like or dislike
 + value: like, dislike (enum)
-+ level: 0, 1, 2 (enum)
++ level (enum)
+    + 1 (number)
+    + 2 (number)
+    + 3 (number)
 
 ### Report
 + _id: 578844943a090f1000adb309
