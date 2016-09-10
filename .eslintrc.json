@@ -3,7 +3,7 @@
   "globals": {
     "proton": true,
     "passport": true,
-    "Spark": true,
+    "Sparkd": true,
     "Language": true,
     "User": true,
     "Token": true,
@@ -17,6 +17,7 @@
     "semi": ["error", "never"],
     "strict": 0,
     "no-underscore-dangle": 0,
-    "no-use-before-define": 0
+    "no-use-before-define": 0,
+    "new-cap": 0
   }
 }

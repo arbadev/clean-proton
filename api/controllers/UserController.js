@@ -26,7 +26,7 @@ export default class UserController extends Controller {
   * create() {
     try {
       const user = yield User.create(this.request.body)
-      this.response.body = user
+      this.response.body = yield User.me({ _id: user._id })
       this.response.status = 201
     } catch (err) {
       proton.log.error('UserController.create', err)
@@ -40,8 +40,8 @@ export default class UserController extends Controller {
    */
   * findMe() {
     try {
-      const userId = this.request.user._id
-      this.response.body = yield User.me(userId)
+      const { _id } = this.request.user
+      this.response.body = yield User.me({ _id })
     } catch (err) {
       proton.log.error('UserController.findMe', err)
       this.response.status = 400
@@ -54,27 +54,13 @@ export default class UserController extends Controller {
    */
   * updateMe() {
     try {
-      const userId = this.request.user._id
+      const { _id } = this.request.user
       const values = this.request.body
-      const userUpdated = yield User.updateOne(userId, values)
-      this.response.body = userUpdated
+      yield User.findOneAndUpdate({ _id }, values)
+      this.response.body = yield User.me({ _id })
       this.response.status = 200
     } catch (err) {
       proton.log.error('UserController.updateMe', err)
-      this.response.status = 400
-    }
-  }
-
-  /**
-   * @description
-   * @author Carlos Marcano
-   */
-  * findOne() {
-    try {
-      const { userId } = this.params
-      this.response.body = yield User.findOneById(userId)
-    } catch (err) {
-      proton.log.error('UserController.findOne', err)
       this.response.status = 400
     }
   }
@@ -90,47 +76,6 @@ export default class UserController extends Controller {
       this.response.status = !user ? 404 : 200
     } catch (err) {
       proton.log.error('UserController.destroy', err)
-      this.response.status = 400
-    }
-  }
-
-  /**
-   * @description
-   * @author Carlos Marcano
-   */
-  * findSparkds() {
-    try {
-      this.response.body = {}
-    } catch (err) {
-      proton.log.error('UserController.findSparkds', err)
-      this.response.status = 400
-    }
-  }
-
-  /**
-   * @description
-   * @author Carlos Marcano
-   */
-  * findSparkd() {
-    try {
-      const { sparkdId } = this.params
-      const { user } = this.request
-      const criteria = {
-        _id: sparkdId,
-        'mates.user': user._id,
-      }
-      const spark = yield Spark.findOne(criteria)
-        .populate('mates.user')
-
-      // TODO: Make this with deep populate
-      spark.mates[0].user.languages = yield Language.find(
-        { _id: { $in: spark.mates[0].user.languages } })
-      spark.mates[1].user.languages = yield Language.find(
-          { _id: { $in: spark.mates[1].user.languages } })
-
-      this.response.body = spark
-    } catch (err) {
-      proton.log.error('UserController.findSparkd', err)
       this.response.status = 400
     }
   }

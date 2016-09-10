@@ -1,6 +1,7 @@
 'use strict'
 
 import Model from 'proton-mongoose-model'
+import _ from 'lodash'
 
 export default class User extends Model {
 
@@ -10,12 +11,6 @@ export default class User extends Model {
       lastName: String,
       avatar: String,
       message: String,
-      ageRange: {
-        type: {
-          min: String,
-          max: String,
-        },
-      },
       status: {
         type: String,
         enum: ['on', 'off'],
@@ -51,34 +46,13 @@ export default class User extends Model {
    *
    *
    */
-  static me(id) {
-    const _id = Model.parseObjectId(id)
-    return this.findOne({ _id }).populate('languages')
-  }
-
-  /**
-   * @method findOneById
-   * @description find a user for any of its unique identifiers
-   */
-  static findOneById(id) {
-    const _id = Model.parseObjectId(id)
-    const criteria = {
-      $or: [
-        { _id },
-        { email: id },
-        { facebookId: id },
-      ],
-    }
-    return this.findOne(criteria).populate('languages')
-  }
-
-  /**
-   *
-   *
-   */
-  static updateOne(id, values) {
-    const _id = Model.parseObjectId(id)
-    return this.findOneAndUpdate({ _id }, values, { new: true }).populate('languages')
+  static * me(criteria) {
+    const me = yield this.findOne(criteria).populate('languages')
+    if (!me) return undefined
+    const { CloudinaryService } = proton.app.services
+    const publicAvatar = CloudinaryService.pixelateUrlOfLevel1(me.avatar)
+    const transform = (doc, ret) => ret.avatar ? Object.assign(ret, { publicAvatar }) : ret.avatar
+    return me.toJSON({ transform })
   }
 
   /**
@@ -98,13 +72,18 @@ export default class User extends Model {
   }
 
   /**
-  *
-  *
-  */
+   *
+   *
+   */
   static * findByQueryParams(query) {
     const criteria = yield this._buildCriteriaByQueryParams(query)
-    proton.log.debug('Criteria to find users', criteria)
-    return this.find(criteria).populate('languages')
+    const { CloudinaryService } = proton.app.services
+    if (!this.schema.options.toJSON) this.schema.options.toJSON = {}
+    this.schema.options.toJSON.transform = (doc, ret) => {
+      ret.avatar = CloudinaryService.pixelateUrlOfLevel1(ret.avatar)
+      return _.pick(ret, '_id', 'firstName', 'lastName', 'avatar', 'message', 'status', 'birthdate')
+    }
+    return this.find(criteria)
   }
 
   // ---------------------------------------------------------------------------

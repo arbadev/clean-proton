@@ -7,7 +7,7 @@ export default class Token extends Model {
 
   schema() {
     return {
-      user: String,
+      facebookId: String,
       value: String,
       scope: String,
     }
@@ -18,9 +18,9 @@ export default class Token extends Model {
   * @description create a token document
   * @return the token value
   */
-  static generate(user) {
+  static generate(facebookId) {
     const token = new this({
-      user,
+      facebookId,
       value: hat(),
       scope: '*',
     })
