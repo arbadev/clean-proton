@@ -4,7 +4,7 @@ import { expect } from 'chai'
 
 const request = supertest(app)
 
-describe('UserController', () => {
+describe.skip('UserController', () => {
 
 
   let [barbara, luis, mariangela, andres] = ['', '', '', '']
@@ -122,7 +122,7 @@ describe('UserController', () => {
     })
   })
 
-  describe('reports on sparks', () => {
+  describe.skip('reports on sparks', () => {
     const aReason = 'Photo'
     const aDescription = 'a description'
 

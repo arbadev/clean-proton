@@ -9,7 +9,8 @@ const user = {
   firstName: String,
   lastName: String,
   avatar: String,
-  message: String,
+  question: String,
+  answer: String,
   age: String,
 }
 
@@ -33,19 +34,37 @@ export default class Spark extends Model {
   }
 
   /**
-   * @method addMessage
-   * @description Add a voice message to an spark
+   * @method addQuestion
+   * @description Add a question to the appropriate user in the spark
    * @param id - The id of the spark
-   * @param from - who send the message
-   * @param message - the message uri
+   * @param from - who send the question
+   * @param message - the voice note uri
    * @author Luis Hernandez
    */
-  static * addMessage(id, from, message) {
+  static * addQuestion(id, from, message) {
     const criteria = {
       _id: Model.parseObjectId(id),
       'users._id': Model.parseObjectId(from)
     }
-    const values = { '$set': {'users.$.message': message } }
+    const values = { '$set': {'users.$.question': message } }
+    const spark = yield this.findOneAndUpdate(criteria, values, { new: true })
+    return spark
+  }
+
+ /**
+  * @method addAnswer
+  * @description Add an answer to the appropriate user in the spark
+  * @param id - The id of the spark
+  * @param from - who send the answer
+  * @param message - the voice note uri
+  * @author Luis Hernandez
+  */
+  static * addAnswer(id, from, message) {
+    const criteria = {
+      _id: Model.parseObjectId(id),
+      'users._id': Model.parseObjectId(from)
+    }
+    const values = { '$set': {'users.$.answer': message } }
     const spark = yield this.findOneAndUpdate(criteria, values, { new: true })
     return spark
   }

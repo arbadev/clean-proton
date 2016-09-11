@@ -32,15 +32,35 @@ describe('SparkController', () => {
     yield [User.remove({}), Token.remove({})]
   })
 
-  it('Add message to a spark', function*(){
-    const message = 'hola'
+  it('Barbara add question to his spark with Luis', function*(){
+    const question = 'hola'
     const { body } = yield request
-      .post(`/sparkds/${spark._id}/messages`)
+      .post(`/sparkds/${spark._id}/questions`)
       .set('Authorization', `Bearer ${barbara.token.value}`)
-      .send({ message })
+      .send({ question })
       .expect(201)
-    const user = body.users.find(element => element._id = barbara._id)
-    expect(user).to.have.property('message', message)
+    const user = body.users.find(element => element._id == barbara._id)
+    expect(user).to.have.property('question', question)
+  })
+
+  it('Barbara cant respond if not exist a question from Luis', function*(){
+    const answer = 'hola'
+    const { body } = yield request
+      .post(`/sparkds/${spark._id}/answers`)
+      .set('Authorization', `Bearer ${barbara.token.value}`)
+      .send({ answer })
+      .expect(400)
+  })
+
+  it('Luis add an answer to the spark that he has with Barbara', function*(){
+    const answer = 'hola'
+    const { body } = yield request
+      .post(`/sparkds/${spark._id}/answers`)
+      .set('Authorization', `Bearer ${luis.token.value}`)
+      .send({ answer })
+      .expect(201)
+    const user = body.users.find(element => element._id == luis._id)
+    expect(user).to.have.property('answer', answer)
   })
 
 })
