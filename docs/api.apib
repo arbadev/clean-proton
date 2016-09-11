@@ -159,16 +159,45 @@ This section groups the user resources
 + Response 200 (application/json)
     + Attributes (Sparkd)
 
-## Add message  [/sparkds/{id}/messages]
+## Questions of sparkd [/sparkds/{id}/question]
 
-### Create a message for a sparkd [POST]
+### Create [POST]
 
 + Request (application/json)
+    + Headers
+
+            Authorization: Bearer 1af2a706fb133bf7f8f928671f844b65
+
+    + Body
+
+            {
+                "question": "url question"
+            }
 
 + Response 201 (application/json)
 
     + Attributes (Sparkd)
 
+
+
+## Answers of sparkd [/sparkds/{id}/answers]
+
+### Create [POST]
+
++ Request (application/json)
+    + Headers
+
+            Authorization: Bearer 1af2a706fb133bf7f8f928671f844b65
+
+    + Body
+
+            {
+                "answer": "url question"
+            }
+
++ Response 201 (application/json)
+
+    + Attributes (Sparkd)
 
 
 # Group Storage
@@ -233,6 +262,13 @@ This section groups the user resources
 + coordinates: `25.7625063`, `-80.1947745` (array)
 + facebookId: 10153476574898450 (string) - the facebookId of the user
 
+## User Sparkd
++ _id: 507f1f77bcf86cd799439011
++ firstName: Pablo (string, required) - The user first name
++ lastName: Guzman (string, required) - The user last name
++ question: `https://s3.amazonaws.com/persona.nucleos/ad3a793972a1c6f8243826c1c89fe725.mp3` (string) - The audio of question
++ answer: `https://s3.amazonaws.com/persona.nucleos/ad3a793972a1c6f8243826c1c89fe725.mp3` (string) - The audio of answer
+
 ### Sparkd
 + _id: 578844943a090f1000adb309
 + status: sparking, sparked, sparkout (enum)
@@ -240,7 +276,10 @@ This section groups the user resources
     + 1 (number)
     + 2 (number)
     + 3 (number)
-+ user (User Collection)
++ me (User Sparkd)
++ user (User Sparkd)
++ questionPending (boolean)
++ answerPending (boolean)
 
 ### Language
 + _id: 574e56eae630e21100867221
