@@ -41,8 +41,8 @@ export default class Like extends Model {
 
   * beforeCreate(like, next) {
     const criteria = { 'users._id': { $all: [like.from, like.to] } }
-    const spark = yield Sparkd.findOne(criteria)
-    like.level = spark ? spark.level : 0
+    const sparkd = yield Sparkd.findOne(criteria)
+    like.level = sparkd ? sparkd.level : 0
     next()
   }
 
@@ -53,9 +53,8 @@ export default class Like extends Model {
     const sparkCriteria = { 'users._id': { $all: [like.from, like.to] } }
 
     if (counterpart && like.isPositive() && counterpart.isPositive()) {
-
       if (like.level === 0) {
-        // For the spark creation we need the from an the to values populated :D
+        // For the sparkd creation we need the from an the to values populated :D
         like = yield this.model.findOne({ _id: like._id }).populate(populations)
         const users = [like.from, like.to]
         yield Sparkd.create({ users })
@@ -64,7 +63,6 @@ export default class Like extends Model {
       if (like.level > 0) {
         yield Sparkd.update(sparkCriteria, { $inc: { level: 1 } })
       }
-
     }
 
     if (like.isNegative() && counterpart) {

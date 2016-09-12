@@ -9,6 +9,7 @@
     "Token": true,
     "Like": true,
     "Report": true,
+    "Feedback": true,
     "describe": true,
     "it": true
   },

@@ -50,7 +50,7 @@ export default class User extends Model {
     const me = yield this.findOne(criteria).populate('languages')
     if (!me) return undefined
     const { CloudinaryService } = proton.app.services
-    const publicAvatar = CloudinaryService.pixelateUrlOfLevel1(me.avatar)
+    const publicAvatar = me.avatar ? CloudinaryService.pixelateUrlOfLevel1(me.avatar) : undefined
     const transform = (doc, ret) => ret.avatar ? Object.assign(ret, { publicAvatar }) : ret.avatar
     return me.toJSON({ transform })
   }

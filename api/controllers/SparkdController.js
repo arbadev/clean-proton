@@ -18,19 +18,45 @@ export default class SparkdController extends Controller {
     }
   }
 
-  * addMessage() {
+  /**
+   * @method addQuestion
+   * @description When a user made this request in the users array in the object
+   * that belongs to him it is added the question field which contain an url with
+   * a voice note
+   * @author Luis Hernandez
+   */
+  * addQuestion() {
     try {
-      const from = this.request.user._id
-      const { message } = this.request.body
-      const spark = yield Sparkd.addMessage(this.params.spark, from, message)
-      this.status = 201
-      this.response.body = spark
+      const { user } = this.request
+      const { question } = this.request.body
+      const sparkd = yield Sparkd.addQuestion(this.params.sparkd, user, question)
+      this.response.status = 201
+      this.response.body = sparkd
     } catch (err) {
-      const message = 'An error ocurred adding the message to an spark'
-      proton.log.error(message, err)
-      this.status = 400
+      proton.log.error(err)
+      this.response.status = 400
     }
   }
 
+
+  /**
+   * @method addAnswer
+   * @description When a user made this request in the users array in the object
+   * that belongs to him it is added the answer field which contain an url with
+   * a voice note
+   * @author Luis Hernandez
+   */
+  * addAnswer() {
+    try {
+      const { user } = this.request
+      const { answer } = this.request.body
+      const sparkd = yield Sparkd.addAnswer(this.params.sparkd, user, answer)
+      this.response.status = 201
+      this.response.body = sparkd
+    } catch (err) {
+      proton.log.error(err)
+      this.response.status = 400
+    }
+  }
 
 }

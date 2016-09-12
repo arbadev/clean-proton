@@ -9,7 +9,8 @@ const UserSchema = {
   firstName: String,
   lastName: String,
   avatar: String,
-  message: String,
+  question: String,
+  answer: String,
   age: String,
 }
 
@@ -34,8 +35,8 @@ export default class Sparkd extends Model {
 
   * afterCreate(record, next) {
     const pushMessage = {
-      event: 'new spark',
-      data: { spark: record.id },
+      event: 'new sparkd',
+      data: { sparkd: record.id },
     }
     const { NotificationService } = proton.app.services
     yield NotificationService.sendPush(record.users[0]._id, pushMessage)
@@ -44,23 +45,49 @@ export default class Sparkd extends Model {
   }
 
   /**
-   * @method addMessage
-   * @description Add a voice message to an spark
-   * @param id - The id of the spark
-   * @param from - who send the message
-   * @param message - the message uri
+   * @method addQuestion
+   * @description Add a question to the appropriate user in the sparkd
+   * @param id - The id of the sparkd
+   * @param from - who send the question
+   * @param message - the voice note uri
    * @author Luis Hernandez
    */
-  static * addMessage(id, from, message) {
+  static * addQuestion(id, from, message) {
     const criteria = {
       _id: Model.parseObjectId(id),
-      'users._id': Model.parseObjectId(from),
+      'users._id': from._id,
     }
-    const values = { $set: { 'users.$.message': message } }
-    const spark = yield this.findOneAndUpdate(criteria, values, { new: true })
-    return spark
+    const values = { $set: { 'users.$.question': message } }
+    const sparkd = yield this.findOneAndUpdate(criteria, values, { new: true })
+    return formatSparkd.call(this, from, sparkd)
   }
 
+  /**
+   * @method addAnswer
+   * @description Add an answer to the appropriate user in the sparkd
+   * @param id - The id of the sparkd
+   * @param from - who send the answer
+   * @param message - the voice note uri
+   * @author Luis Hernandez
+   */
+  static * addAnswer(id, from, message) {
+    const criteria = {
+      _id: Model.parseObjectId(id),
+      'users._id': from._id,
+    }
+    const values = { $set: { 'users.$.answer': message } }
+    const sparkd = yield this.findOneAndUpdate(criteria, values, { new: true })
+    return formatSparkd.call(this, from, sparkd)
+  }
+
+  /**
+   * @method findByQueryParams
+   * @description
+   * @param opts.user - The user that send request
+   * @param opts.uri - the base uri of request
+   * @param opts.params - the query params os request
+   * @author Carlos Marcano
+   */
   static * findByQueryParams({ user, uri, params }) {
     const { SearchService } = proton.app.services
     const criteria = buildCriteria.call(this, user, params)
@@ -84,9 +111,24 @@ function buildCriteria(user, params) {
 function formatSparkd(user, sparkd) {
   const { CloudinaryService } = proton.app.services
   const { _id, status, level } = sparkd
-  const counterPart = sparkd.users.find(({ _id }) => !_id.equals(user._id))
+  let me = {}
+  let counterPart = {}
+  sparkd.users.map(u => {
+    if (u._id.equals(user._id)) me = u
+    else counterPart = u
+    return u
+  })
   if (level === 1) {
     counterPart.avatar = CloudinaryService.pixelateUrlOfLevel2(user.avatar)
   }
-  return { _id, status, level, user: counterPart }
+  const questionPending = !me.question
+  const answerPending = !!counterPart.question
+  return {
+    _id,
+    me,
+    status,
+    level,
+    questionPending,
+    answerPending,
+    user: counterPart }
 }
