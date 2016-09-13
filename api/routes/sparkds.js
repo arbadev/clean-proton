@@ -6,6 +6,7 @@ const { AuthPolicies, AskPolicies } = proton.app.policies
 const { SparkdController } = proton.app.controllers
 
 router.get('/', AuthPolicies.bearer, SparkdController.find)
+router.get('/:sparkd', AuthPolicies.bearer, SparkdController.findOne)
 
 router.post(
   '/:sparkd/questions',

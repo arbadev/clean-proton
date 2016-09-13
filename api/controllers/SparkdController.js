@@ -18,6 +18,20 @@ export default class SparkdController extends Controller {
     }
   }
 
+  * findOne() {
+    const { params } = this
+    const { user } = this.request
+    const opts = { user, sparkdId: params.sparkd }
+    try {
+      const sparkd = yield Sparkd.findOneByUser(opts)
+      this.status = !sparkd ? 404 : 200
+      this.response.body = sparkd
+    } catch (err) {
+      proton.log.error('SparkdController.find', err)
+      this.status = 400
+    }
+  }
+
   /**
    * @method addQuestion
    * @description When a user made this request in the users array in the object

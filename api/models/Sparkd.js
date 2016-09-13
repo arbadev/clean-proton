@@ -96,6 +96,24 @@ export default class Sparkd extends Model {
     const sparkds = collection.map(c => formatSparkd.call(this, user, c))
     return { pagination, sparkds }
   }
+
+  /**
+   * @method findOne
+   * @description
+   * @param opts.user - The user that send request
+   * @param opts.sparkd - The id of sparkd to find
+   * @author Carlos Marcano
+   */
+  static * findOneByUser({ user, sparkdId }) {
+    proton.log.debug('sparkdId', sparkdId)
+    const criteria = {
+      _id: Model.parseObjectId(sparkdId),
+      'users._id': user._id,
+    }
+    proton.log.debug('criteria', criteria)
+    const sparkd = yield this.findOne(criteria)
+    return sparkd ? formatSparkd(user, sparkd) : undefined
+  }
 }
 
 function buildCriteria(user, params) {

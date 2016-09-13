@@ -102,4 +102,12 @@ describe('SparkController', () => {
     proton.log.debug('headers', headers)
     proton.log.debug('body', body)
   })
+
+  it('Find one sparkd', function*() {
+    const { body, headers } = yield request
+      .get(`/sparkds/${sparkd._id}`)
+      .set('Authorization', `Bearer ${barbara.token.value}`)
+      .expect(200)
+    proton.log.debug('body', body)
+  })
 })
