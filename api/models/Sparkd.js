@@ -105,12 +105,10 @@ export default class Sparkd extends Model {
    * @author Carlos Marcano
    */
   static * findOneByUser({ user, sparkdId }) {
-    proton.log.debug('sparkdId', sparkdId)
     const criteria = {
       _id: Model.parseObjectId(sparkdId),
       'users._id': user._id,
     }
-    proton.log.debug('criteria', criteria)
     const sparkd = yield this.findOne(criteria)
     return sparkd ? formatSparkd(user, sparkd) : undefined
   }
