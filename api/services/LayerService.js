@@ -8,11 +8,9 @@ const privateKey = process.env.LAYER_PRIVATE_KEY.replace(/\\n/g, '\n')
 export default class LayerService extends Service {
 
   * createSession(opts) {
-    const {user} = opts
-    const {nonce} = JSON.parse(yield getNonce())
-    console.log(nonce)
-    const identityToken = getIdentityToken(user, nonce)
-    return getSessionToken(identityToken)
+    const { user } = opts
+    const { nonce } = JSON.parse(yield getNonce())
+    return getIdentityToken(user, nonce)
   }
 
 }

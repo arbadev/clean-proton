@@ -33,7 +33,7 @@ describe('LayerController', () => {
       .post('/layer-sessions')
       .set('Authorization', `Bearer ${barbara.token.value}`)
       .expect(200)
-    expect(body).to.have.property('token')
+    expect(body).to.have.property('identityToken')
   })
 
 })
