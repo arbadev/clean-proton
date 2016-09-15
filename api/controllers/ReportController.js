@@ -12,7 +12,7 @@ export default class ReportController extends Controller {
       const subject = 'REPORT SPARKD'
       const { reason } = this.request.body
       const criteria = { 'users._id': from }
-      const userReporter = yield User.findOneById(criteria)
+      const userReporter = yield User.findOne(criteria)
       const userName = `${userReporter.firstName} ${userReporter.lastName}`
       const userEmail = userReporter.email
       const content = { reason, from, to, userName, userEmail }
