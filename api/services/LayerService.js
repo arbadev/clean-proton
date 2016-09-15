@@ -7,12 +7,25 @@ const privateKey = process.env.LAYER_PRIVATE_KEY.replace(/\\n/g, '\n')
 
 export default class LayerService extends Service {
 
-  createSession(opts) {
-    const {user, nonce} = opts
+  * createSession(opts) {
+    const {user} = opts
+    const {nonce} = JSON.parse(yield getNonce())
+    console.log(nonce)
     const identityToken = getIdentityToken(user, nonce)
     return getSessionToken(identityToken)
   }
 
+}
+
+function getNonce() {
+  const opts = {
+    uri: `${process.env.LAYER_URI}/nonces`,
+    headers: {
+      'Accept': 'application/vnd.layer+json; version=1.0'
+    },
+    method: 'POST'
+  }
+  return request(opts)
 }
 
 function getSessionToken(identityToken) {
@@ -49,5 +62,10 @@ function getIdentityToken(user, nonce) {
     nce: nonce
   })
 
-  return jsrsasign.jws.JWS.sign('RS256', header, claim, privateKey)
+  try {
+    return jsrsasign.jws.JWS.sign('RS256', header, claim, privateKey)
+
+  } catch(err) {
+    console.log('error error', err)
+  }
 }

@@ -32,7 +32,6 @@ describe('LayerController', () => {
     const { body } = yield request
       .post('/layer-sessions')
       .set('Authorization', `Bearer ${barbara.token.value}`)
-      .send({nonce: '2uhag1N5yV5nTSDyVjnTXLTMUXtub3PaUyJLFRbs9S_eXvbpxVlxN2P55KABuqc0Fpbm50-5Cjyhds2T_inWdA'})
       .expect(200)
     expect(body).to.have.property('token')
   })

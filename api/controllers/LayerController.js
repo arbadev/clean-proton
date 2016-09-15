@@ -8,10 +8,10 @@ export default class LayerController extends Controller {
       const user = this.request.user._id
       const { nonce } = this.request.body
       const { LayerService } = proton.app.services
-      const token = yield LayerService.createSession({user, nonce})
-      this.response.body = { token }
+      const data = yield LayerService.createSession({user, nonce})
+      this.response.body = { token: data.session_token }
     } catch (err) {
-      proton.log.error('errorrrrr', err.error)
+      proton.log.error('Error gerating a layer session token', err)
       this.response.status = 400
     }
   }
