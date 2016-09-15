@@ -10,10 +10,13 @@ export default class FeedbackController extends Controller {
       const from = this.request.user._id
       const { title } = this.request.body
       const { description } = this.request.body
-      const content = { title, description, from }
+      const userReporter = yield User.findOneById(from)
+      const userName = `${userReporter.firstName} ${userReporter.lastName}`
+      const userEmail = userReporter.email
+      const content = { title, description, from, userName, userEmail }
       const { EmailService } = proton.app.services
       const subject = 'FEEDBACK SPARKD'
-      EmailService.sendMail(subject, content)
+      EmailService.sendFeedbackMail(subject, content)
       proton.log.debug('After mail')
       yield Feedback.create({ from, title, description })
       proton.log.debug('After Create Feedback')

@@ -11,12 +11,14 @@ export default class ReportController extends Controller {
       const to = this.params.userId
       const subject = 'REPORT SPARKD'
       const { reason } = this.request.body
-      const { description } = this.request.body
-      const content = { reason, description, from, to }
+      const userReporter = yield User.findOneById(from)
+      const userName = `${userReporter.firstName} ${userReporter.lastName}`
+      const userEmail = userReporter.email
+      const content = { reason, from, to, userName, userEmail }
       const { EmailService } = proton.app.services
-      EmailService.sendMail(subject, content)
+      EmailService.sendReportMail(subject, content)
       proton.log.debug('After mail')
-      yield Report.create({ from, to, reason, description })
+      yield Report.create({ from, to, reason })
       proton.log.debug('After Create report')
       this.response.status = 201
     } catch (err) {
@@ -30,10 +32,13 @@ export default class ReportController extends Controller {
       const { EmailService } = proton.app.services
       const subject = 'REPORT MAIL'
       const content = {
-        reason: 'A reason 2.0',
-        description: 'A description 2.0',
+        reason: 'Photo',
+        userName: 'Andres Barradas',
+        userEmail: 'a3barradas@gmial.com',
+        from: 'asd32k23j242l',
+        to: 'skjdnaskdnl2324234',
       }
-      EmailService.sendMail(subject, content)
+      EmailService.sendReportMail(subject, content)
       this.response.status = 201
     } catch (err) {
       proton.log.error('ReportController.createMail', err)

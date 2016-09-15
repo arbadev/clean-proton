@@ -48,7 +48,8 @@
     "sha1": "^1.1.1",
     "should": "^9.0.2",
     "supertest": "^1.2.0",
-    "winston": "^2.0.0"
+    "winston": "^2.0.0",
+    "hogan.js": "^3.0.2"
   },
   "devDependencies": {
     "babel-eslint": "^6.0.4",
