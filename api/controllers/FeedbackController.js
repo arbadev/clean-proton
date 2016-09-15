@@ -10,7 +10,7 @@ export default class FeedbackController extends Controller {
       const from = this.request.user._id
       const { title } = this.request.body
       const { description } = this.request.body
-      const criteria = { 'users._id': from }
+      const criteria = { _id: from }
       const userReporter = yield User.findOne(criteria)
       const userName = `${userReporter.firstName} ${userReporter.lastName}`
       const userEmail = userReporter.email
