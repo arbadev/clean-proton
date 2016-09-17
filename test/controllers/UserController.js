@@ -60,6 +60,13 @@ describe('UserController', () => {
     yield [User.remove({}), Token.remove({}), Like.remove({}), Sparkd.remove({})]
   })
 
+  it('Create firebase token', function*() {
+    yield request
+      .post('/users/me/firebase-token')
+      .set('Authorization', `Bearer ${barbara.token.value}`)
+      .expect(201)
+  })
+
   it('Luis likes Barbara', function*() {
     yield request
       .post(`/users/${barbara._id}/like`)
