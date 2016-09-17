@@ -9,6 +9,7 @@ export default class BearerStrategy extends Strategy {
   }
 
   static strategy(value, done) {
+    proton.log.debug('token value', value)
     Token.findOneByValue(value)
       .then(token => {
         if (!token) throw new Error('Token not found')
