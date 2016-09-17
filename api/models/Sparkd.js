@@ -59,7 +59,7 @@ export default class Sparkd extends Model {
     }
     const values = { $set: { 'users.$.question': message } }
     const sparkd = yield this.findOneAndUpdate(criteria, values, { new: true })
-    return formatSparkd.call(this, from, sparkd)
+    return toJson.call(this, from, sparkd)
   }
 
   /**
@@ -77,7 +77,7 @@ export default class Sparkd extends Model {
     }
     const values = { $set: { 'users.$.answer': message } }
     const sparkd = yield this.findOneAndUpdate(criteria, values, { new: true })
-    return formatSparkd.call(this, from, sparkd)
+    return toJson.call(this, from, sparkd)
   }
 
   /**
@@ -93,7 +93,7 @@ export default class Sparkd extends Model {
     const criteria = buildCriteria.call(this, user, params)
     const opts = { criteria, uri, params }
     const { pagination, collection } = yield SearchService.search(this, opts)
-    const sparkds = collection.map(c => formatSparkd.call(this, user, c))
+    const sparkds = collection.map(c => toJson.call(this, user, c))
     return { pagination, sparkds }
   }
 
@@ -105,14 +105,12 @@ export default class Sparkd extends Model {
    * @author Carlos Marcano
    */
   static * findOneByUser({ user, sparkdId }) {
-    proton.log.debug('sparkdId', sparkdId)
     const criteria = {
       _id: Model.parseObjectId(sparkdId),
       'users._id': user._id,
     }
-    proton.log.debug('criteria', criteria)
     const sparkd = yield this.findOne(criteria)
-    return sparkd ? formatSparkd(user, sparkd) : undefined
+    return sparkd ? toJson(user, sparkd) : undefined
   }
 }
 
@@ -126,7 +124,7 @@ function buildCriteria(user, params) {
   return criteria
 }
 
-function formatSparkd(user, sparkd) {
+function toJson(user, sparkd) {
   const { CloudinaryService } = proton.app.services
   const { _id, status, level } = sparkd
   let me = {}

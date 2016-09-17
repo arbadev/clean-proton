@@ -15,28 +15,40 @@ describe.skip('UserController', () => {
       email: 'baba@gmail.com',
       facebookId: 1,
       avatar: 'http://res.cloudinary.com/nucleos/image/upload/v1468541626/1f84ab06f0513b197ffd282c0b615669.jpg',
+      message: 'message.mp3',
+      coordinates: [9.016277, -62.637863],
+      gender: 'female',
     },
     {
       firstName: 'luis',
       email: 'luis@nucleos.io',
       facebookId: 2,
       avatar: 'http://res.cloudinary.com/nucleos/image/upload/v1468541626/1f84ab06f0513b197ffd282c0b615669.jpg',
+      message: 'message.mp3',
+      coordinates: [7.833070, -62.744980],
+      gender: 'male',
     },
     {
       firstName: 'Mariangela',
       email: 'marian@nucleos.io',
       facebookId: 3,
       avatar: 'http://res.cloudinary.com/nucleos/image/upload/v1468541626/1f84ab06f0513b197ffd282c0b615669.jpg',
+      message: 'message.mp3',
+      coordinates: [8.326624, -62.618637],
+      gender: 'female',
     },
     {
       firstName: 'andres',
       email: 'andres@nucleos.io',
       facebookId: 4,
       avatar: 'http://res.cloudinary.com/nucleos/image/upload/v1468541626/1f84ab06f0513b197ffd282c0b615669.jpg',
+      message: 'message.mp3',
+      coordinates: [8.368363, -62.648163],
+      gender: 'male',
     },
   ]
 
-  beforeEach(function*() {
+  before(function*() {
     [barbara, luis, mariangela, andres] = yield User.create(users)
     barbara.token = yield Token.generate(barbara.facebookId)
     luis.token = yield Token.generate(luis.facebookId)
@@ -44,8 +56,29 @@ describe.skip('UserController', () => {
     andres.token = yield Token.generate(andres.facebookId)
   })
 
-  afterEach(function*() {
-    yield [User.remove({}), Token.remove({})]
+  after(function*() {
+    yield [User.remove({}), Token.remove({}), Like.remove({}), Sparkd.remove({})]
+  })
+
+  it('Create firebase token', function*() {
+    yield request
+      .post('/users/me/firebase-token')
+      .set('Authorization', `Bearer ${barbara.token.value}`)
+      .expect(201)
+  })
+
+  it('Luis likes Barbara', function*() {
+    yield request
+      .post(`/users/${barbara._id}/like`)
+      .set('Authorization', `Bearer ${luis.token.value}`)
+      .expect(201)
+  })
+
+  it('Barbara likes Andres', function*() {
+    yield request
+      .post(`/users/${andres._id}/like`)
+      .set('Authorization', `Bearer ${barbara.token.value}`)
+      .expect(201)
   })
 
   it('Find', function*() {
@@ -74,13 +107,6 @@ describe.skip('UserController', () => {
     yield request
       .post(`/users/${andres._id}/like`)
       .set('Authorization', `Bearer ${mariangela.token.value}`)
-      .expect(201)
-  })
-
-  it('Luis likes Barbara', function*() {
-    yield request
-      .post(`/users/${barbara._id}/like`)
-      .set('Authorization', `Bearer ${luis.token.value}`)
       .expect(201)
   })
 
@@ -141,7 +167,7 @@ describe.skip('UserController', () => {
     expect(body).to.have.property('languages').an('array')
   })
 
-  describe.skip('reports on sparks', () => {
+  describe('reports on sparks', () => {
     const aReason = 'Photo'
     const aDescription = 'a description'
 
@@ -161,7 +187,7 @@ describe.skip('UserController', () => {
     })
   })
 
-  describe.skip('Sparkd Feedbacks', () => {
+  describe('Sparkd Feedbacks', () => {
     const aTitle = 'My title'
     const aDescription = 'a description'
 

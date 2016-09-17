@@ -21,6 +21,7 @@
     "babel-polyfill": "^6.0.1",
     "babel-preset-es2015-node5": "^1.0.0",
     "babel-preset-node5": "^10.0.0",
+    "firebase": "^3.4.0",
     "hat": "0.0.3",
     "jsrsasign": "^6.0.1",
     "koa-multer": "^0.0.2",

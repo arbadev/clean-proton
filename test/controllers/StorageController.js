@@ -7,13 +7,13 @@ const request = supertest(app)
 
 describe.skip('StorageController', () => {
   it('create cloudinary signature object', function*() {
-    const response = yield request
+    yield request
       .post('/cloudinary-signatures')
       .expect(201)
   })
 
   it('create bucket object', function*() {
-    const response = yield request
+    yield request
       .post('/s3-signed-uris')
       .expect(201)
   })

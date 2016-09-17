@@ -4,9 +4,11 @@ import { isEmpty, last as lastItem } from 'lodash'
 import Model from 'proton-mongoose-model'
 import qs from 'querystring'
 
+const defaultLimit = 10
+
 export default class SearchService extends Service {
   * search(model, opts) {
-    const limit = 3
+    const limit = opts.params.limit || defaultLimit
     const criteria = buildCriteria.call(this, opts)
     const [collection, last] = yield [
       getCollection.call(this, model, criteria, limit),
