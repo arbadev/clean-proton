@@ -89,49 +89,49 @@ describe('UserController', () => {
     proton.log.debug('users', body)
   })
 
-  it.skip('Barbara likes Luis', function*() {
+  it('Barbara likes Luis', function*() {
     yield request
       .post(`/users/${luis._id}/like`)
       .set('Authorization', `Bearer ${barbara.token.value}`)
       .expect(201)
   })
 
-  it.skip('Andres likes Mariangela', function*() {
+  it('Andres likes Mariangela', function*() {
     yield request
       .post(`/users/${mariangela._id}/like`)
       .set('Authorization', `Bearer ${andres.token.value}`)
       .expect(201)
   })
 
-  it.skip('Mariangela likes Andres', function*() {
+  it('Mariangela likes Andres', function*() {
     yield request
       .post(`/users/${andres._id}/like`)
       .set('Authorization', `Bearer ${mariangela.token.value}`)
       .expect(201)
   })
 
-  it.skip('Barbara still likes luis', function*() {
+  it('Barbara still likes luis', function*() {
     yield request
       .post(`/users/${luis._id}/like`)
       .set('Authorization', `Bearer ${barbara.token.value}`)
       .expect(201)
   })
 
-  it.skip('Barbara likes Luis', function*() {
+  it('Barbara likes Luis', function*() {
     yield request
       .post(`/users/${luis._id}/like`)
       .set('Authorization', `Bearer ${barbara.token.value}`)
       .expect(201)
   })
 
-  it.skip('Luis not like Barbara', function*() {
+  it('Luis not like Barbara', function*() {
     yield request
       .post(`/users/${barbara._id}/dislike`)
       .set('Authorization', `Bearer ${luis.token.value}`)
       .expect(201)
   })
 
-  it.skip('Update a user profile', function*() {
+  it('Update a user profile', function*() {
     yield request
       .put('/users/me')
       .set('Authorization', `Bearer ${luis.token.value}`)
@@ -139,21 +139,21 @@ describe('UserController', () => {
       .expect(200)
   })
 
-  it.skip('Mariangela still likes Andres', function*() {
+  it('Mariangela still likes Andres', function*() {
     yield request
       .post(`/users/${andres._id}/like`)
       .set('Authorization', `Bearer ${mariangela.token.value}`)
       .expect(201)
   })
 
-  it.skip('Andres still likes Mariangela', function*() {
+  it('Andres still likes Mariangela', function*() {
     yield request
       .post(`/users/${mariangela._id}/like`)
       .set('Authorization', `Bearer ${andres.token.value}`)
       .expect(201)
   })
 
-  it.skip('Find me', function*() {
+  it('Find me', function*() {
     const { body } = yield request
       .get('/users/me')
       .set('Authorization', `Bearer ${luis.token.value}`)
@@ -167,7 +167,7 @@ describe('UserController', () => {
     expect(body).to.have.property('languages').an('array')
   })
 
-  describe.skip('reports on sparks', () => {
+  describe('reports on sparks', () => {
     const aReason = 'Photo'
     const aDescription = 'a description'
 
@@ -187,7 +187,7 @@ describe('UserController', () => {
     })
   })
 
-  describe.skip('Sparkd Feedbacks', () => {
+  describe('Sparkd Feedbacks', () => {
     const aTitle = 'My title'
     const aDescription = 'a description'
 

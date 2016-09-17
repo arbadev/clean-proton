@@ -4,7 +4,7 @@ import { expect } from 'chai'
 
 const request = supertest(app)
 
-describe.skip('SparkController', () => {
+describe('SparkController', () => {
   let { barbara, luis, carlos, marian, alex, andres, sparkd } = {}
 
   const users = [
