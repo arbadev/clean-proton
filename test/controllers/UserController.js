@@ -6,7 +6,7 @@ import { expect } from 'chai'
 
 const request = supertest(app)
 
-describe.skip('UserController', () => {
+describe('UserController', () => {
   let [barbara, luis, mariangela, andres] = []
 
   const users = [

@@ -7,7 +7,6 @@ import { expect } from 'chai'
 const request = supertest(app)
 
 describe('LayerController', () => {
-
   let barbara = ''
 
   const users = [
@@ -16,7 +15,7 @@ describe('LayerController', () => {
       email: 'baba@gmail.com',
       facebookId: 1,
       avatar: 'http://res.cloudinary.com/nucleos/image/upload/v1468541626/1f84ab06f0513b197ffd282c0b615669.jpg',
-    }
+    },
   ]
 
   beforeEach(function*() {
@@ -29,11 +28,12 @@ describe('LayerController', () => {
   })
 
   it('get session token', function*() {
+    const nonce = 'l3TsSFTSMILmX2ONrqYqKSJrUzyitC57dGALE_ExA0RO03QyaFVduISWDYvq9BLZdGnwHzLVF4wZOLF'
     const { body } = yield request
       .post('/layer-sessions')
       .set('Authorization', `Bearer ${barbara.token.value}`)
+      .send({ nonce })
       .expect(200)
     expect(body).to.have.property('identityToken')
   })
-
 })

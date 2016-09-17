@@ -18,7 +18,8 @@ export default class EmailService extends Service {
     const compliedTemplate = hogan.compile(template)
     proton.log.debug('EmailService.sendMail content', mContent)
     // const cont = `${mContent.reason} -- ${mContent.description} -- ${mContent.from}`
-    const request = sg.emptyRequest({
+    proton.log.debug('sg', this.sg.emptyRequest)
+    const request = this.sg.emptyRequest({
       method: 'POST',
       path: '/v3/mail/send',
       body: {
@@ -52,7 +53,7 @@ export default class EmailService extends Service {
     const compliedTemplate = hogan.compile(template)
     proton.log.debug('EmailService.sendMail content', mContent)
     // const cont = `${mContent.reason} -- ${mContent.description} -- ${mContent.from}`
-    const request = sg.emptyRequest({
+    const request = this.sg.emptyRequest({
       method: 'POST',
       path: '/v3/mail/send',
       body: {
@@ -81,7 +82,7 @@ export default class EmailService extends Service {
   }
 
   _sendRequest(request) {
-    sg.API(request)
+    this.sg.API(request)
     .then(response => {
       proton.log.debug(response.statusCode)
     })

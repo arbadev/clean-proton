@@ -8,8 +8,8 @@ const privateKey = process.env.LAYER_PRIVATE_KEY.replace(/\\n/g, '\n')
 export default class LayerService extends Service {
 
   * createSession(opts) {
-    const { user } = opts
-    const { nonce } = JSON.parse(yield getNonce())
+    const { user, nonce } = opts
+    // const { nonce } = JSON.parse(yield getNonce())
     return getIdentityToken(user, nonce)
   }
 
@@ -19,9 +19,9 @@ function getNonce() {
   const opts = {
     uri: `${process.env.LAYER_URI}/nonces`,
     headers: {
-      'Accept': 'application/vnd.layer+json; version=1.0'
+      'Accept': 'application/vnd.layer+json; version=1.0',
     },
-    method: 'POST'
+    method: 'POST',
   }
   return request(opts)
 }
@@ -31,12 +31,12 @@ function getSessionToken(identityToken) {
     uri: `${process.env.LAYER_URI}/sessions`,
     json: {
       identity_token: identityToken,
-      app_id: process.env.LAYER_APP_ID
+      app_id: process.env.LAYER_APP_ID,
     },
     headers: {
-      'Accept': 'application/vnd.layer+json; version=1.0'
+      'Accept': 'application/vnd.layer+json; version=1.0',
     },
-    method: 'POST'
+    method: 'POST',
   }
   return request(opts)
 }
@@ -46,7 +46,7 @@ function getIdentityToken(user, nonce) {
     typ: 'JWT',
     alg: 'RS256',
     cty: 'layer-eit;v=1',
-    kid: process.env.LAYER_KEY_ID
+    kid: process.env.LAYER_KEY_ID,
   })
 
   const currentTimeInSeconds = Math.round(new Date() / 1000)
@@ -57,13 +57,12 @@ function getIdentityToken(user, nonce) {
     prn: user,
     iat: currentTimeInSeconds,
     exp: expirationTime,
-    nce: nonce
+    nce: nonce,
   })
 
   try {
     return jsrsasign.jws.JWS.sign('RS256', header, claim, privateKey)
-
-  } catch(err) {
+  } catch (err) {
     console.log('error error', err)
   }
 }
