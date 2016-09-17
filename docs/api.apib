@@ -33,15 +33,13 @@ This section groups the user resources
 + Parameters
     + minAge: 20 (number, required)
     + maxAge: 30 (number, required)
-    + lat: `25.7625063` (number, optional) Latitude of user. If lng is present this parameter is required
-    + lng: `-80.1947745` (number, optional) Longitude of user. If lat is present this parameter is required
     + gender: male (enum, optional)
         + Members
             + male
             + female
             + other
-    + limit: 10 (number, optional)
-        + Default: 10
+    + strict: true (boolean, optional)
+        + Default: false
 
 + Request (application/json)
     + Headers

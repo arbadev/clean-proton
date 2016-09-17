@@ -3,6 +3,9 @@
 import Model from 'proton-mongoose-model'
 import _ from 'lodash'
 
+const limitDefault = 20
+const genders = ['male', 'female', 'other']
+
 export default class User extends Model {
 
   schema() {
@@ -18,7 +21,10 @@ export default class User extends Model {
       },
       gender: {
         type: String,
-        enum: ['male', 'female', 'other'],
+        enum: genders,
+      },
+      birthdate: {
+        type: Date,
       },
       email: {
         type: String,
@@ -30,7 +36,8 @@ export default class User extends Model {
       },
       coordinates: {
         type: [Number],
-        index: '2d',
+        index: '2dsphere',
+        default: [0, 0],
       },
       languages: [{
         type: Model.types.ObjectId,
@@ -75,86 +82,98 @@ export default class User extends Model {
    *
    *
    */
-  static * findByQueryParams(query) {
-    const criteria = yield this._buildCriteriaByQueryParams(query)
-    const { CloudinaryService } = proton.app.services
-    if (!this.schema.options.toJSON) this.schema.options.toJSON = {}
-    this.schema.options.toJSON.transform = (doc, ret) => {
-      ret.avatar = CloudinaryService.pixelateUrlOfLevel1(ret.avatar)
-      return _.pick(ret, '_id', 'firstName', 'lastName', 'avatar', 'message', 'status', 'birthdate')
+  static * findByQueryParams({ user, params = {} }) {
+    const limit = params.limit || limitDefault
+    let users = [...(yield findUsersLikesMe.call(this, user, limit))]
+    if (limit > users.length) {
+      const criteria = yield buildCriteria.call(this, user, params)
+      const opts = {
+        coordinates: user.coordinates,
+        query: criteria,
+        limit: limit - users.length,
+      }
+      users = [...users, ...(yield findNearbyUsers.call(this, opts))]
     }
-    return this.find(criteria)
+    return users.map(u => toJson.call(this, u))
   }
+}
 
-  // ---------------------------------------------------------------------------
-  // ---------------------------------------------------------------------------
-  // Private methods
-  // ---------------------------------------------------------------------------
-  // ---------------------------------------------------------------------------
-
-  /**
-   *
-   *
-   */
-  static * _buildCriteriaByQueryParams(query) {
-    return Object.assign(
-      {},
-      yield this._getExcludedUsersCriteria(query),
-      yield this._getOrderCriteria(query),
-      yield this._getGenderCriteria(query),
-      yield this._getAgeCriteria(query),
-      { status: 'on', avatar: { $ne: null }, message: { $ne: null } }
-    )
+/**
+ * @description
+ * @author Carlos Marcano
+ */
+function * findUsersLikesMe(user, limit) {
+  let criteria = { level: 0, from: user._id }
+  let likes = yield Like.find(criteria)
+  const myLikeUsers = likes.map(({ to }) => to)
+  criteria = { value: 'like', level: 0, to: user._id, from: { $nin: myLikeUsers } }
+  likes = yield Like.find(criteria)
+  const usersLikesMe = likes.map(({ from }) => from)
+  const query = { _id: { $in: usersLikesMe } }
+  const opts = {
+    limit,
+    query,
+    coordinates: user.coordinates,
   }
+  return findNearbyUsers.call(this, opts)
+}
 
-  /**
-   *
-   *
-   */
-  static * _getExcludedUsersCriteria({ user }) {
-    const userId = Model.parseObjectId(user._id)
-
-    // Users excluded by dislike
-    const likeCriteria = {
-      $or: [
-        { value: 'like', from: userId },
-        {
-          value: 'dislike',
-          $or: [{ from: userId }, { to: userId }],
-        },
-      ],
-    }
-    const likes = yield Like.find(likeCriteria)
-    const likeIds = likes.map(like => {
-      const { from, to } = like
-      return to === userId ? from : to
-    })
-
-    const idsExcluded = [userId].concat(likeIds)
-    return { _id: { $nin: idsExcluded } }
+/**
+ * @description
+ * @author Carlos Marcano
+ */
+function * buildCriteria(user, params) {
+  const userId = user._id
+  const likesCriteria = {
+    level: 0,
+    $or: [{ from: userId }, { to: userId }],
   }
-
-  /**
-   *
-   *
-   */
-  static _getOrderCriteria(query) {
-    return {}
+  const likes = yield Like.find(likesCriteria)
+  const usersExcluded = likes.map(l => userId.equals(l.from) ? l.to : l.from)
+  usersExcluded.push(userId)
+  const criteria = {
+    _id: { $nin: usersExcluded },
+    status: 'on',
+    avatar: { $ne: null },
+    message: { $ne: null },
+    gender: params.gender || { $in: genders },
   }
+  return criteria
+}
 
-  /**
-   *
-   *
-   */
-  static _getGenderCriteria({ gender }) {
-    return gender && ['female', 'male'].includes(gender) ? { gender } : {}
+/**
+ * @description
+ * @author Carlos Marcano
+ */
+function findNearbyUsers({ coordinates, query, limit }) {
+  const $geoNear = {
+    query,
+    limit,
+    near: { coordinates, type: 'Point' },
+    spherical: true,
+    distanceField: 'distance',
+    uniqueDocs: true,
   }
+  const $project = {
+    _id: 1,
+    firstName: 1,
+    lastName: 1,
+    message: 1,
+    avatar: 1,
+    status: 1,
+    birthdate: 1,
+    distance: 1,
+  }
+  return this.aggregate([{ $geoNear }, { $project }])
+}
 
-  /**
-   *
-   *
-   */
-  static _getAgeCriteria({ minAge, maxAge }) {
-    return {}
-  }
+/**
+ * @description
+ * @author Carlos Marcano
+ */
+function toJson(user) {
+  const json = user.toJSON ? user.toJSON() : user
+  const { CloudinaryService } = proton.app.services
+  json.avatar = CloudinaryService.pixelateUrlOfLevel1(json.avatar)
+  return json
 }
