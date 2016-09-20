@@ -2,9 +2,9 @@
 
 import Controller from 'proton-controller'
 
-export default class ThirdPartyController extends Controller {
+export default class FirebaseController extends Controller {
 
-  * createFirebaseToken() {
+  * createToken() {
     try {
       const { user } = this.request
       const { FirebaseService } = proton.app.services
@@ -12,7 +12,7 @@ export default class ThirdPartyController extends Controller {
       this.response.status = 201
       this.response.body = { token }
     } catch (err) {
-      proton.log.error('ThirdPartyController.createFirebaseToken', err)
+      proton.log.error('FirebaseController.createToken', err)
       this.status = 400
     }
   }

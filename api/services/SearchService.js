@@ -8,7 +8,7 @@ const defaultLimit = 10
 
 export default class SearchService extends Service {
   * search(model, opts) {
-    const limit = opts.params.limit ? parseFloat(opts.params.limit) : defaultLimit
+    const limit = opts.params.limit ? Number(opts.params.limit) : defaultLimit
     const criteria = buildCriteria.call(this, opts)
     const [collection, last] = yield [
       getCollection.call(this, model, criteria, limit),

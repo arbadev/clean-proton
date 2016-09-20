@@ -135,7 +135,7 @@ function toJson(user, sparkd) {
     return u
   })
   if (level === 1) {
-    counterPart.avatar = CloudinaryService.pixelateUrlOfLevel2(user.avatar)
+    counterPart.avatar = CloudinaryService.pixelateUrlOfLevel2(counterPart.avatar)
   }
   const questionPending = !me.question
   const answerPending = !!counterPart.question

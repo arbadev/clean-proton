@@ -7,7 +7,6 @@ const {
   UserController,
   ReportController,
   FeedbackController,
-  ThirdPartyController,
 } = proton.app.controllers
 
 router.get('/', AuthPolicies.bearer, UserController.find)
@@ -17,7 +16,6 @@ router.put('/me', AuthPolicies.bearer, UserController.updateMe)
 
 router.get('/me', AuthPolicies.bearer, UserController.findMe)
 router.patch('/me', AuthPolicies.bearer, UserController.updateMe)
-router.post('/me/firebase-token', AuthPolicies.bearer, ThirdPartyController.createFirebaseToken)
 
 router.delete('/:userId', UserController.destroy)
 
