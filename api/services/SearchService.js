@@ -8,10 +8,12 @@ const defaultLimit = 10
 
 export default class SearchService extends Service {
   * search(model, opts) {
+    const { populations } = opts
     const limit = opts.params.limit ? Number(opts.params.limit) : defaultLimit
     const criteria = buildCriteria.call(this, opts)
+    const aggregation = yield getCollection.call(this, model, criteria, limit)
     const [collection, last] = yield [
-      getCollection.call(this, model, criteria, limit),
+      populations ? model.populate(aggregation, populations) : aggregation,
       getLastBound.call(this, model, criteria),
     ]
     if (!isValidCollection.call(this, collection)) return { collection: [] }

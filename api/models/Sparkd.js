@@ -3,6 +3,7 @@
 import Model from 'proton-mongoose-model'
 
 const statuses = ['sparking', 'sparked,', 'sparkout']
+const populations = 'users.languages'
 
 const UserSchema = {
   _id: { type: Model.types.ObjectId },
@@ -11,7 +12,13 @@ const UserSchema = {
   avatar: String,
   question: String,
   answer: String,
-  age: String,
+  birthdate: {
+    type: Date,
+  },
+  languages: [{
+    type: Model.types.ObjectId,
+    ref: 'Language',
+  }],
 }
 
 export default class Sparkd extends Model {
@@ -59,6 +66,7 @@ export default class Sparkd extends Model {
     }
     const values = { $set: { 'users.$.question': message } }
     const sparkd = yield this.findOneAndUpdate(criteria, values, { new: true })
+      .populate(populations)
     return toJson.call(this, from, sparkd)
   }
 
@@ -77,6 +85,7 @@ export default class Sparkd extends Model {
     }
     const values = { $set: { 'users.$.answer': message } }
     const sparkd = yield this.findOneAndUpdate(criteria, values, { new: true })
+      .populate(populations)
     return toJson.call(this, from, sparkd)
   }
 
@@ -91,7 +100,7 @@ export default class Sparkd extends Model {
   static * findByQueryParams({ user, uri, params }) {
     const { SearchService } = proton.app.services
     const criteria = buildCriteria.call(this, user, params)
-    const opts = { criteria, uri, params }
+    const opts = { criteria, uri, params, populations }
     const { pagination, collection } = yield SearchService.search(this, opts)
     const sparkds = collection.map(c => toJson.call(this, user, c))
     return { pagination, sparkds }
@@ -109,7 +118,7 @@ export default class Sparkd extends Model {
       _id: Model.parseObjectId(sparkdId),
       'users._id': user._id,
     }
-    const sparkd = yield this.findOne(criteria)
+    const sparkd = yield this.findOne(criteria).populate(populations)
     return sparkd ? toJson(user, sparkd) : undefined
   }
 }

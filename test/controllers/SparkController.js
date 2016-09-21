@@ -1,13 +1,14 @@
 import supertest from 'co-supertest'
 import app from '../../server.js'
 import { expect } from 'chai'
+import Model from 'proton-mongoose-model'
+
 
 const request = supertest(app)
 
 describe('SparkController', () => {
   let { barbara, luis, carlos, marian, alex, andres, sparkd } = {}
-
-  const users = [
+  let users = [
     {
       firstName: 'Barbarita',
       email: 'baba@gmail.com',
@@ -47,6 +48,8 @@ describe('SparkController', () => {
   ]
 
   before(function*() {
+    const [firstLanguage] = yield Language.find({})
+    users = users.map(u => Object.assign(u, { languages: [firstLanguage._id] }));
     [barbara, luis, carlos, marian, alex, andres] = yield User.create(users)
     sparkd = yield Sparkd.create({ users: [barbara, luis] })
 
@@ -92,6 +95,7 @@ describe('SparkController', () => {
       .send({ answer })
       .expect(201)
     expect(body.me).to.have.property('answer', answer)
+    proton.log.debug('body', body)
   })
 
   it('Find sparkds', function*() {
