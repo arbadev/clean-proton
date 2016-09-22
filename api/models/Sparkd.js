@@ -15,6 +15,9 @@ const UserSchema = {
   birthdate: {
     type: Date,
   },
+  gender: {
+    type: String,
+  },
   languages: [{
     type: Model.types.ObjectId,
     ref: 'Language',
