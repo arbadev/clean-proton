@@ -40,13 +40,7 @@ export default class Sparkd extends Model {
   }
 
   * afterCreate(record, next) {
-    const pushMessage = {
-      event: 'new sparkd',
-      data: { sparkd: record.id },
-    }
-    const { NotificationService } = proton.app.services
-    yield NotificationService.sendPush(record.users[0]._id, pushMessage)
-    yield NotificationService.sendPush(record.users[1]._id, pushMessage)
+    yield notificate('new sparkd', record)
     next()
   }
 
@@ -66,6 +60,7 @@ export default class Sparkd extends Model {
     const values = { $set: { 'users.$.question': message } }
     const sparkd = yield this.findOneAndUpdate(criteria, values, { new: true })
       .populate(populations)
+    yield notificate('new question', sparkd, from)
     return toJson.call(this, from, sparkd)
   }
 
@@ -85,7 +80,23 @@ export default class Sparkd extends Model {
     const values = { $set: { 'users.$.answer': message } }
     const sparkd = yield this.findOneAndUpdate(criteria, values, { new: true })
       .populate(populations)
+    yield notificate('new answer', sparkd, from)
     return toJson.call(this, from, sparkd)
+  }
+
+  static * updateLevel(criteria) {
+    const sparkd = yield this.findOneAndUpdate(criteria, { $inc: { level: 1 } }, { new: true })
+    if (sparkd.level === 3) {
+      yield this.update(criteria, { status: 'sparked' })
+      yield notificate('update sparkd status', sparkd)
+    } else {
+      yield notificate('update sparkd level', sparkd)
+    }
+  }
+
+  static * sparkout(criteria) {
+    const sparkd = yield this.findOneAndUpdate(criteria, { status: 'sparkout' }, { new: true })
+    yield notificate('update sparkd status', sparkd)
   }
 
   /**
@@ -120,6 +131,31 @@ export default class Sparkd extends Model {
     const sparkd = yield this.findOne(criteria).populate(populations)
     return sparkd ? toJson(user, sparkd) : undefined
   }
+}
+
+/**
+ * @method notificate
+ * @description
+ * @param event The event to notificate
+ * @param sparkd - The sparkd
+ * @param user - The user that send request
+ * @author Carlos Marcano
+ */
+function notificate(event, sparkd, user) {
+  const { NotificationService } = proton.app.services
+  const push = {
+    event,
+    data: { sparkd: sparkd.id },
+  }
+  const notifications = []
+  if (!user) {
+    notifications.push(NotificationService.sendPush(sparkd.users[0]._id, push))
+    notifications.push(NotificationService.sendPush(sparkd.users[1]._id, push))
+  } else {
+    const counterpart = sparkd.users.find(u => !user._id.equals(u._id))
+    notifications.push(NotificationService.sendPush(counterpart._id, push))
+  }
+  return notifications
 }
 
 function buildCriteria(user, params) {

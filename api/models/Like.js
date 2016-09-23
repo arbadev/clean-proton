@@ -61,12 +61,12 @@ export default class Like extends Model {
       }
 
       if (like.level > 0) {
-        yield Sparkd.update(sparkCriteria, { $inc: { level: 1 } })
+        yield Sparkd.updateLevel(sparkCriteria)
       }
     }
 
-    if (like.isNegative() && counterpart) {
-      yield Sparkd.update(sparkCriteria, { status: 'sparkout' })
+    if (like.isNegative()) {
+      yield Sparkd.sparkout(sparkCriteria)
     }
 
     next()
