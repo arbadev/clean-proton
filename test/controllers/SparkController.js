@@ -14,36 +14,42 @@ describe('SparkController', () => {
       email: 'baba@gmail.com',
       facebookId: 1,
       avatar: 'http://res.cloudinary.com/nucleos/image/upload/v1468541626/1f84ab06f0513b197ffd282c0b615669.jpg',
+      gender: 'female',
     },
     {
       firstName: 'luis',
       email: 'luis@nucleos.io',
       facebookId: 2,
       avatar: 'http://res.cloudinary.com/nucleos/image/upload/v1468541626/1f84ab06f0513b197ffd282c0b615669.jpg',
+      gender: 'male',
     },
     {
       firstName: 'Carlos',
       email: 'carlos@nucleos.io',
       facebookId: 3,
       avatar: 'http://res.cloudinary.com/nucleos/image/upload/v1468541626/1f84ab06f0513b197ffd282c0b615669.jpg',
+      gender: 'male',
     },
     {
       firstName: 'Marian',
       email: 'marian@nucleos.io',
       facebookId: 4,
       avatar: 'http://res.cloudinary.com/nucleos/image/upload/v1468541626/1f84ab06f0513b197ffd282c0b615669.jpg',
+      gender: 'female',
     },
     {
       firstName: 'Alexander',
       email: 'alex@nucleos.io',
       facebookId: 5,
       avatar: 'http://res.cloudinary.com/nucleos/image/upload/v1468541626/1f84ab06f0513b197ffd282c0b615669.jpg',
+      gender: 'male',
     },
     {
       firstName: 'Andres',
       email: 'andres@nucleos.io',
       facebookId: 6,
       avatar: 'http://res.cloudinary.com/nucleos/image/upload/v1468541626/1f84ab06f0513b197ffd282c0b615669.jpg',
+      gender: 'male',
     },
   ]
 

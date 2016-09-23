@@ -62,6 +62,20 @@ export default class User extends Model {
     return me.toJSON({ transform })
   }
 
+
+  /**
+   *
+   *
+   */
+  static * updateMe(_id, values) {
+    if (values.languages) {
+      const languages = yield Language.find({ code: { $in: values.languages } })
+      values.languages = languages.map(lang => lang._id)
+    }
+    yield this.findOneAndUpdate({ _id }, values)
+    return this.me({ _id })
+  }
+
   /**
    *
    *

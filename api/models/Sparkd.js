@@ -12,12 +12,8 @@ const UserSchema = {
   avatar: String,
   question: String,
   answer: String,
-  birthdate: {
-    type: Date,
-  },
-  gender: {
-    type: String,
-  },
+  birthdate: { type: Date },
+  gender: { type: String },
   languages: [{
     type: Model.types.ObjectId,
     ref: 'Language',
@@ -141,10 +137,9 @@ function toJson(user, sparkd) {
   const { _id, status, level } = sparkd
   let me = {}
   let counterPart = {}
-  sparkd.users.map(u => {
+  sparkd.users.forEach(u => {
     if (u._id.equals(user._id)) me = u
     else counterPart = u
-    return u
   })
   if (level === 1) {
     counterPart.avatar = CloudinaryService.pixelateUrlOfLevel2(counterPart.avatar)

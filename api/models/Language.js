@@ -1,5 +1,3 @@
-'use strict'
-
 import Model from 'proton-mongoose-model'
 
 export default class Language extends Model {

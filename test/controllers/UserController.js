@@ -125,11 +125,12 @@ describe('UserController', () => {
   })
 
   it('Update a user profile', function*() {
-    yield request
+    const { body } = yield request
       .put('/users/me')
       .set('Authorization', `Bearer ${luis.token.value}`)
-      .send({ firstName: 'Mechas' })
+      .send({ firstName: 'Mechas', languages: ['en', 'es'] })
       .expect(200)
+    expect(body).to.have.property('languages').and.to.have.lengthOf(2)
   })
 
   it('Mariangela still likes Andres', function*() {
