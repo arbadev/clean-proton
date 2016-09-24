@@ -88,10 +88,8 @@ export default class Sparkd extends Model {
     const sparkd = yield this.findOneAndUpdate(criteria, { $inc: { level: 1 } }, { new: true })
     if (sparkd.level === 3) {
       yield this.update(criteria, { status: 'sparked' })
-      yield notificate('update sparkd status', sparkd)
-    } else {
-      yield notificate('update sparkd level', sparkd)
     }
+    yield notificate('update sparkd level', sparkd)
   }
 
   static * sparkout(criteria) {

@@ -21,6 +21,7 @@ export default class Like extends Model {
         enum: ['like', 'dislike'],
         required: true,
       },
+      sparked: Boolean,
       level: Number,
     }
   }
