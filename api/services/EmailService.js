@@ -14,7 +14,7 @@ export default class EmailService extends Service {
 
   sendReportMail(mSubject, mContent) {
     const templatePath = path.join(`${__dirname}/../`, 'views')
-    const template = fs.readFileSync(`${templatePath}/reportTemplate.html`, 'utf-8')
+    const template = fs.readFileSync(`${templatePath}/reportTemplate.hjs`, 'utf-8')
     const compliedTemplate = hogan.compile(template)
     proton.log.debug('EmailService.sendMail content', mContent)
     // const cont = `${mContent.reason} -- ${mContent.description} -- ${mContent.from}`
@@ -49,7 +49,7 @@ export default class EmailService extends Service {
 
   sendFeedbackMail(mSubject, mContent) {
     const templatePath = path.join(`${__dirname}/../`, 'views')
-    const template = fs.readFileSync(`${templatePath}/feedbackTemplate.html`, 'utf-8')
+    const template = fs.readFileSync(`${templatePath}/feedbackTemplate.hjs`, 'utf-8')
     const compliedTemplate = hogan.compile(template)
     proton.log.debug('EmailService.sendMail content', mContent)
     // const cont = `${mContent.reason} -- ${mContent.description} -- ${mContent.from}`
