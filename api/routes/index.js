@@ -27,6 +27,8 @@ router.post('/test-level-2', function * () {
   yield Like.create(mToA)
   yield Like.create(aToM)
 
+  yield Like.create(aToM)
+
   this.response.body = 'Test created'
 })
 
