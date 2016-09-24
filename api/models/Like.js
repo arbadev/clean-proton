@@ -72,4 +72,16 @@ export default class Like extends Model {
     next()
   }
 
+  static * create(values) {
+    const like = new this(values)
+    yield like.save()
+    const sparkCriteria = { 'users._id': { $all: [like.from, like.to] } }
+    const sparkd = yield Sparkd.findOne(sparkCriteria)
+    if (sparkd && sparkd.status === 'sparked') {
+      like.sparked = true
+      yield like.save()
+    }
+    return like
+  }
+
 }
