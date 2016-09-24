@@ -15,6 +15,7 @@ describe('SparkController', () => {
       facebookId: 1,
       avatar: 'http://res.cloudinary.com/nucleos/image/upload/v1468541626/1f84ab06f0513b197ffd282c0b615669.jpg',
       gender: 'female',
+      coordinates: [7.88629051, -62.8513232],
     },
     {
       firstName: 'luis',
@@ -22,6 +23,7 @@ describe('SparkController', () => {
       facebookId: 2,
       avatar: 'http://res.cloudinary.com/nucleos/image/upload/v1468541626/1f84ab06f0513b197ffd282c0b615669.jpg',
       gender: 'male',
+      coordinates: [7.88629051, -62.8513232],
     },
     {
       firstName: 'Carlos',
@@ -29,6 +31,7 @@ describe('SparkController', () => {
       facebookId: 3,
       avatar: 'http://res.cloudinary.com/nucleos/image/upload/v1468541626/1f84ab06f0513b197ffd282c0b615669.jpg',
       gender: 'male',
+      coordinates: [7.88629051, -62.8513232],
     },
     {
       firstName: 'Marian',
@@ -36,6 +39,7 @@ describe('SparkController', () => {
       facebookId: 4,
       avatar: 'http://res.cloudinary.com/nucleos/image/upload/v1468541626/1f84ab06f0513b197ffd282c0b615669.jpg',
       gender: 'female',
+      coordinates: [7.88629051, -62.8513232],
     },
     {
       firstName: 'Alexander',
@@ -43,6 +47,7 @@ describe('SparkController', () => {
       facebookId: 5,
       avatar: 'http://res.cloudinary.com/nucleos/image/upload/v1468541626/1f84ab06f0513b197ffd282c0b615669.jpg',
       gender: 'male',
+      coordinates: [7.88629051, -62.8513232],
     },
     {
       firstName: 'Andres',
@@ -50,6 +55,7 @@ describe('SparkController', () => {
       facebookId: 6,
       avatar: 'http://res.cloudinary.com/nucleos/image/upload/v1468541626/1f84ab06f0513b197ffd282c0b615669.jpg',
       gender: 'male',
+      coordinates: [7.88629051, -62.8513232],
     },
   ]
 

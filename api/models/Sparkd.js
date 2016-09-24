@@ -129,7 +129,10 @@ export default class Sparkd extends Model {
       'users._id': user._id,
     }
     const sparkd = yield this.findOne(criteria).populate(populations)
-    return sparkd ? toJson(user, sparkd) : undefined
+    const counterpart = sparkd.users.find(u => !user._id.equals(u._id))
+    const { coordinates } = yield User.findById(counterpart._id)
+    const opts = { counterPart: { coordinates } }
+    return sparkd ? toJson(user, sparkd, opts) : undefined
   }
 }
 
@@ -168,7 +171,7 @@ function buildCriteria(user, params) {
   return criteria
 }
 
-function toJson(user, sparkd) {
+function toJson(user, sparkd, opts = {}) {
   const { CloudinaryService } = proton.app.services
   const { _id, status, level } = sparkd
   let me = {}
@@ -189,5 +192,6 @@ function toJson(user, sparkd) {
     level,
     questionPending,
     answerPending,
-    user: counterPart }
+    user: opts.counterPart ? Object.assign({}, counterPart._doc, opts.counterPart) : counterPart,
+  }
 }
