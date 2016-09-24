@@ -29,3 +29,5 @@ router.post('/test-level-2', function * () {
 
   this.response.body = 'Test created'
 })
+
+module.exports = router
