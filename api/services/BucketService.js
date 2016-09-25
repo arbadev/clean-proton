@@ -10,7 +10,7 @@ export default class BucketService extends Service {
 
   generateBucketObject() {
     const name = `${hat()}.mp3`
-    const type = 'audio/mpeg'
+    const type = ''
     aws.config.update({
       region: 'us-east-1',
     })
@@ -19,7 +19,6 @@ export default class BucketService extends Service {
       Bucket: bucket,
       Key: name,
       Expires: 200,
-      ContentType: type,
       ACL: 'public-read',
     }
     const signedUri = s3.getSignedUrl('putObject', params)
