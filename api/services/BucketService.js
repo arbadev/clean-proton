@@ -9,8 +9,8 @@ const bucket = process.env.AWS_BUCKET_NAME
 export default class BucketService extends Service {
 
   generateBucketObject() {
-    const name = `${hat()}.mp3`
-    const type = 'audio/mpeg3'
+    const name = hat()
+    const type = 'audio/mpeg'
     aws.config.update({
       region: 'us-east-1',
     })
@@ -22,7 +22,8 @@ export default class BucketService extends Service {
       ContentType: type,
       ACL: 'public-read',
     }
-    const signedUri = s3.getSignedUrl('putObject', params)
+    const data = s3.getSignedUrl('putObject', params)
+    const signedUri = data
     const uri = `https://${bucket}.s3.amazonaws.com/${name}`
     return { signedUri, uri }
   }
