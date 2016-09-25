@@ -35,7 +35,7 @@ export default class ReportController extends Controller {
       const content = {
         reason: 'Photo',
         userName: 'Andres Barradas',
-        userEmail: 'a3barradas@gmial.com',
+        userEmail: 'a3barradas@gmail.com',
         from: 'asd32k23j242l',
         to: 'skjdnaskdnl2324234',
       }
