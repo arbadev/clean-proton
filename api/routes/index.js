@@ -6,8 +6,8 @@ router.get('/', function * () {
 
 
 router.post('/test-level-2', function * () {
-  const andres = yield User.findOne({ email: 'cjose.m@hotmail.com' })
-  const marian = yield User.findOne({ email: 'msalcedo047@gmail.com' })
+  const andres = yield User.findOne({ email: this.request.body.email1 })
+  const marian = yield User.findOne({ email: this.request.body.email2 })
   const mToA = {
     value: 'like',
     from: marian._id,
