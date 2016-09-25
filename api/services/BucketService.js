@@ -10,8 +10,8 @@ const bucket = process.env.AWS_BUCKET_NAME
 export default class BucketService extends Service {
 
   generateBucketObject() {
-    const name = `${hat()}.mp3`
-    const type = 'audio/mpeg'
+    const name = hat()
+    const type = ''
     const s3 = new aws.S3()
     const params = {
       Bucket: bucket,
