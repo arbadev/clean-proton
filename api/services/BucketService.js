@@ -16,7 +16,7 @@ export default class BucketService extends Service {
     const s3 = new aws.S3()
     const params = {
       Bucket: bucket,
-      Key: name,
+      Key: `${name}.mp3`,
       Expires: 200,
       ContentType: type,
       ACL: 'public-read',
