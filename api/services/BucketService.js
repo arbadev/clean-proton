@@ -8,7 +8,7 @@ const bucket = process.env.AWS_BUCKET_NAME
 
 export default class BucketService extends Service {
 
-  generateBucketObject(type = 'audio/mpeg') {
+  generateBucketObject(type = 'audio/mp4') {
     const name = "audio"
     aws.config.update({
       region: 'us-east-1',
