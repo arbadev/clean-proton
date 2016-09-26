@@ -19,7 +19,8 @@ export default class StorageController extends Controller {
   * generateBucketSignedUri() {
     try {
       const { BucketService } = proton.app.services
-      const response = BucketService.generateBucketObject()
+      const { type } = this.request.body
+      const response = BucketService.generateBucketObject(type)
       this.response.status = 201
       this.response.body = response
     } catch (err) {
