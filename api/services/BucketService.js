@@ -8,15 +8,15 @@ const bucket = process.env.AWS_BUCKET_NAME
 
 export default class BucketService extends Service {
 
-  generateBucketObject(type = 'audio/mpeg3') {
-    const name = hat()
+  generateBucketObject(type = 'audio/mpeg') {
+    const name = `${hat()}.mp3`
     aws.config.update({
       region: 'us-east-1',
     })
     const s3 = new aws.S3()
     const params = {
       Bucket: bucket,
-      Key: `${name}.mp3`,
+      Key: `${name}`,
       Expires: 200,
       ContentType: type,
       ACL: 'public-read',
