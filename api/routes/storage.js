@@ -3,7 +3,7 @@
 import Router from 'koa-router'
 
 const router = new Router()
-const {StorageController} = proton.app.controllers
+const { StorageController } = proton.app.controllers
 
 router.post('/cloudinary-signatures', StorageController.generateCloudinarySignature)
 
