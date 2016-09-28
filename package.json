@@ -23,10 +23,12 @@
     "babel-preset-node5": "^10.0.0",
     "firebase": "^3.4.0",
     "hat": "0.0.3",
+    "hogan.js": "^3.0.2",
     "jsrsasign": "^6.0.1",
     "koa-multer": "^0.0.2",
     "koa-router": "^5.0.0",
     "lodash": "^4.0.0",
+    "moment": "^2.15.1",
     "mongo-uri-builder": "^1.0.0",
     "passport-facebook-token": "^3.0.2",
     "passport-http-bearer": "^1.0.1",
@@ -50,8 +52,7 @@
     "sha1": "^1.1.1",
     "should": "^9.0.2",
     "supertest": "^1.2.0",
-    "winston": "^2.0.0",
-    "hogan.js": "^3.0.2"
+    "winston": "^2.0.0"
   },
   "devDependencies": {
     "babel-eslint": "^6.0.4",
