@@ -61,7 +61,7 @@ export default class Sparkd extends Model {
     const sparkd = yield this.findOneAndUpdate(criteria, values, { new: true })
       .populate(populations)
     yield notificate('new question', sparkd, from)
-    return toJson.call(this, from, sparkd)
+    return yield toJson.call(this, from, sparkd)
   }
 
   /**
@@ -81,7 +81,7 @@ export default class Sparkd extends Model {
     const sparkd = yield this.findOneAndUpdate(criteria, values, { new: true })
       .populate(populations)
     yield notificate('new answer', sparkd, from)
-    return toJson.call(this, from, sparkd)
+    return yield toJson.call(this, from, sparkd)
   }
 
   static * updateLevel(criteria) {
@@ -109,8 +109,12 @@ export default class Sparkd extends Model {
     const { SearchService } = proton.app.services
     const criteria = buildCriteria.call(this, user, params)
     const opts = { criteria, uri, params, populations }
-    const { pagination, collection } = yield SearchService.search(this, opts)
-    const sparkds = collection.map(c => toJson.call(this, user, c))
+    const { pagination, collection = [] } = yield SearchService.search(this, opts)
+    const sparkds = []
+    for (let i = 0; i < collection.length; i++) {
+      const sparkd = yield toJson.call(this, user, collection[i])
+      sparkds.push(sparkd)
+    }
     return { pagination, sparkds }
   }
 
@@ -130,7 +134,7 @@ export default class Sparkd extends Model {
     const counterpart = sparkd.users.find(u => !user._id.equals(u._id))
     const { coordinates } = yield User.findById(counterpart._id)
     const opts = { counterPart: { coordinates } }
-    return sparkd ? toJson(user, sparkd, opts) : undefined
+    return sparkd ? yield toJson.call(this, user, sparkd, opts) : undefined
   }
 }
 
@@ -169,7 +173,7 @@ function buildCriteria(user, params) {
   return criteria
 }
 
-function toJson(user, sparkd, opts = {}) {
+function * toJson(user, sparkd, opts = {}) {
   const { CloudinaryService } = proton.app.services
   const { _id, status, level } = sparkd
   let me = {}
@@ -181,6 +185,9 @@ function toJson(user, sparkd, opts = {}) {
   if (level === 1) {
     counterPart.avatar = CloudinaryService.pixelateUrlOfLevel2(counterPart.avatar)
   }
+  const myLikeCreiteria = { level, from: me._id, to: counterPart._id }
+  const myLike = yield Like.findOne(myLikeCreiteria)
+  const likePending = !myLike
   const questionPending = !me.question
   const answerPending = !!counterPart.question
   return {
@@ -190,6 +197,7 @@ function toJson(user, sparkd, opts = {}) {
     level,
     questionPending,
     answerPending,
+    likePending,
     user: opts.counterPart ? Object.assign({}, counterPart._doc, opts.counterPart) : counterPart,
   }
 }
