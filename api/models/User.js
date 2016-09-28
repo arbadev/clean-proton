@@ -153,8 +153,8 @@ function * buildCriteria(user, params) {
   }
 
   if (params.minAge && params.maxAge) {
-    const minDate = moment().subtratc(params.minAge, 'years')
-    const maxDate = moment().subtratc(params.maxAge, 'years')
+    const minDate = moment().subtract(params.minAge, 'years')
+    const maxDate = moment().subtract(params.maxAge, 'years')
     criteria.birthdate = {
       $gt: maxDate.toDate(),
       $lt: minDate.toDate(),
