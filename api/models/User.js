@@ -1,7 +1,7 @@
 'use strict'
 
 import Model from 'proton-mongoose-model'
-import _ from 'lodash'
+import moment from 'moment'
 
 const limitDefault = 20
 const genders = ['male', 'female', 'other']
@@ -138,13 +138,12 @@ function * findUsersLikesMe(user, limit) {
  */
 function * buildCriteria(user, params) {
   const userId = user._id
-  const likesCriteria = {
-    level: 0,
-    $or: [{ from: userId }, { to: userId }],
-  }
+  const likesCriteria = { level: 0, $or: [{ from: userId }, { to: userId }] }
   const likes = yield Like.find(likesCriteria)
+
   const usersExcluded = likes.map(l => userId.equals(l.from) ? l.to : l.from)
   usersExcluded.push(userId)
+
   const criteria = {
     _id: { $nin: usersExcluded },
     status: 'on',
@@ -152,6 +151,16 @@ function * buildCriteria(user, params) {
     message: { $ne: null },
     gender: params.gender || { $in: genders },
   }
+
+  if (params.minAge && params.maxAge) {
+    const minDate = moment().subtratc(params.minAge, 'years')
+    const maxDate = moment().subtratc(params.maxAge, 'years')
+    criteria.birthdate = {
+      $gt: maxDate.toDate(),
+      $lt: minDate.toDate(),
+    }
+  }
+
   return criteria
 }
 
